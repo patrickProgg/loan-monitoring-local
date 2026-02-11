@@ -59,7 +59,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 // $route['expenses'] = 'View_ui_cont/expenses';
 // $route['history'] = 'View_ui_cont/history';
 
+// $route['default_controller'] = 'dashboard';
 $route['default_controller'] = 'View_ui_cont';
+$route['login'] = 'Login_cont/login';
+$route['logout'] = 'Login_cont/logout';
 $route['dashboard'] = 'View_ui_cont/dashboard';
 $route['client'] = 'View_ui_cont/monitoring';
 $route['pull_out'] = 'View_ui_cont/pull_out';
