@@ -407,12 +407,30 @@
                     cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // redirect to logout URL
-                        window.location.href = logoutLink.href;
+                        // show loading swal
+                        Swal.fire({
+                            title: '<strong>Logging Out...</strong>',
+                            html: '<i class="fa fa-spinner fa-spin" style="font-size: 24px; color: #4caf50;"></i><br><br>Please wait while we logged you out.',
+                            showConfirmButton: false,
+                            // background: 'linear-gradient(135deg, #f3f4f6, #e0f7fa)',
+                            color: '#333',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                const swalContent = Swal.getHtmlContainer();
+                                if (swalContent) {
+                                    swalContent.style.textAlign = 'center';
+                                }
+                            }
+                        });
+                        setTimeout(() => {
+                            window.location.href = logoutLink.href;
+                        }, 500);
                     }
                 });
             });
         });
+
 
     </script>
 
