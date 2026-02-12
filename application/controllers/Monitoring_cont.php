@@ -222,6 +222,45 @@ class Monitoring_cont extends CI_Controller
         echo json_encode([$query->result_array()]);
     }
 
+    // public function get_loan_details()
+    // {
+    //     $id = $this->input->post('id');
+
+    //     $this->db->select("
+    //     a.capital_amt,
+    //     a.interest,
+    //     a.added_amt,
+    //     a.total_amt,
+    //     a.start_date,
+    //     a.due_date,
+    //     a.complete_date,
+    //     a.status,
+    //     b.payment_for,
+    //     b.amt
+    // ");
+
+    //     $this->db->from('tbl_loan as a');
+    //     $this->db->join('tbl_payment as b', 'b.loan_id = a.id', 'left');
+    //     $this->db->where('a.id', $id);
+    //     $this->db->order_by('b.payment_for', 'ASC');
+
+    //     $query = $this->db->get()->result_array();
+
+    //     $key = "12345678901234567890123456789012"; // 32 chars
+    //     $iv = "1234567890123456"; // 16 chars
+
+    //     $encrypted = openssl_encrypt(
+    //         json_encode($query),
+    //         'AES-256-CBC',
+    //         $key,
+    //         0,
+    //         $iv
+    //     );
+
+    //     echo json_encode(['data' => $encrypted]);
+    // }
+
+
     public function get_loan_details()
     {
         $id = $this->input->post('id');
@@ -1472,7 +1511,11 @@ class Monitoring_cont extends CI_Controller
     {
         $date = $this->input->post('date');
 
-        // First, get all clients with loans where selected date is between start_date and due_date
+        $datePlusOne = date('Y-m-d', strtotime($date . ' -1 day'));
+
+        // var_dump($date);
+        // var_dump($datePlusOne);
+
         $this->db->select('
         a.id as loan_id,
         a.start_date,
@@ -1483,7 +1526,7 @@ class Monitoring_cont extends CI_Controller
     ');
         $this->db->from('tbl_loan as a');
         $this->db->join('tbl_client as b', 'b.id = a.cl_id');
-        $this->db->where("'$date' BETWEEN a.start_date AND a.due_date");
+        $this->db->where("'$datePlusOne' BETWEEN a.start_date AND a.due_date");
         $this->db->where('a.status', 'ongoing');
         $this->db->where('b.status !=', '1');
         $this->db->order_by('b.acc_no', 'ASC');
@@ -1491,7 +1534,6 @@ class Monitoring_cont extends CI_Controller
         $query = $this->db->get();
         $clients = $query->result_array();
 
-        // Now check for existing payments for each client on the selected date
         foreach ($clients as &$client) {
             $loan_id = $client['loan_id'];
 
@@ -1509,7 +1551,6 @@ class Monitoring_cont extends CI_Controller
             }
         }
 
-        // Prepare response
         $response = [
             'data' => $clients
         ];

@@ -332,8 +332,8 @@ $config['cache_query_string'] = FALSE;
 | https://codeigniter.com/userguide3/libraries/encryption.html
 |
 */
-$config['encryption_key'] = '';
-// $config['encryption_key'] = '892a1c4865d4bb8b3936fb16ede01dee4ee1a7be0cb58f370abc343e58da18e7loan-monitoring@';
+// $config['encryption_key'] = '';
+$config['encryption_key'] = '892a1c4865d4bb8b3936fb16ede01dee4ee1a7be0cb58f370abc343e58da18e7loan-monitoring@';
 
 /*
 |--------------------------------------------------------------------------
@@ -481,6 +481,7 @@ $config['global_xss_filtering'] = FALSE;
 | 'csrf_exclude_uris' = Array of URIs which ignore CSRF checks
 */
 $config['csrf_protection'] = FALSE;
+// $config['csrf_protection'] = TRUE;
 $config['csrf_token_name'] = 'csrf_test_name';
 $config['csrf_cookie_name'] = 'csrf_cookie_name';
 $config['csrf_expire'] = 7200;

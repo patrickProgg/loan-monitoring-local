@@ -570,6 +570,9 @@
     </main>
 </section>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+
 <script>
 
     let startDate = '';
@@ -968,6 +971,30 @@
                 dataType: "json",
                 data: { id: loanId },
                 success: function (response) {
+
+                    console.log(response);
+                    // const key = CryptoJS.enc.Utf8.parse("my-secret-key-1234567890123456");
+                    // const iv = CryptoJS.enc.Utf8.parse("1234567890123456");
+
+                    // // 🔓 decrypt
+                    // const decrypted = CryptoJS.AES.decrypt(
+                    //     response.data,
+                    //     key,
+                    //     {
+                    //         iv: iv,
+                    //         mode: CryptoJS.mode.CBC,
+                    //         padding: CryptoJS.pad.Pkcs7
+                    //     }
+                    // );
+
+                    // // convert to string
+                    // const jsonString = decrypted.toString(CryptoJS.enc.Utf8);
+
+                    // // convert to object
+                    // const decryptedData = JSON.parse(jsonString);
+
+                    // // now use like before
+                    // const loan = decryptedData[0];
 
                     const loan = response[0];
 

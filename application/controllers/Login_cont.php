@@ -45,13 +45,15 @@ class Login_cont extends CI_Controller
     private function authenticateUser($username, $password)
     {
         $this->db->where('username', $username);
-        $this->db->where('password', $password);
         $query = $this->db->get('tbl_admin');
 
-        if ($query->num_rows() == 1) {
-            return $query->row();
+        $user = $query->row();
+
+        if ($user && password_verify($password, $user->password)) {
+            return $user;
         } else {
             return false;
         }
     }
+
 }

@@ -334,7 +334,7 @@
         fixed; top: 0; width: 100%; z-index: 1050; padding:0">
         <a class="navbar-brand d-flex align-items-center" style="margin-left:129px;" href="<?= base_url(); ?>dashboard"
             style="height: 100%;">
-            <img src="<?= base_url(); ?>assets/images/loan1.png" alt="Logo" style="height: 30px;">
+            <img src="<?= base_url(); ?>assets/images/loan.png" alt="Logo" style="height: 30px;">
         </a>
 
         <ul class="navbar-nav flex-row align-items-center me-auto" style="margin: 0; padding: 0; column-gap: 12px;">
@@ -355,7 +355,7 @@
             <li class="nav-item" style="flex-shrink: 1; min-width: 0;">
                 <a class="nav-link d-flex align-items-center gap-1 <?= ($this->uri->segment(1) == 'pull_out') ? 'active-nav' : '' ?>"
                     href="<?= base_url(); ?>pull_out">
-                    <i class='bx bx-file'></i>
+                    <i class='bx bx-receipt'></i>
                     <span class="menu-label">Pull Out</span>
                 </a>
             </li>
@@ -390,58 +390,29 @@
     <script>
         feather.replace();
 
-        function logout() {
-            Swal.fire({
-                title: 'Sign out',
-                text: "Are you sure you want to sign out?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonText: 'No',
-                confirmButtonText: 'Yes'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: '<?php echo base_url("User_cont/logout"); ?>',
-                        success: function () {
-                            location.reload();
-                        },
-                        error: function (jqXHR) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: 'Something went wrong!'
-                            });
-                        }
-                    });
-                }
-            });
-        }
+        document.addEventListener('DOMContentLoaded', function () {
+            const logoutLink = document.getElementById('logout-link');
 
-        const SESSION_DURATION = 30 * 60 * 1000;
-        // const SESSION_DURATION = 2 * 1000;
+            logoutLink.addEventListener('click', function (e) {
+                e.preventDefault(); // prevent immediate logout
 
-        function autoRefresh() {
-            Swal.fire({
-                title: 'Session Expired',
-                text: 'Your session has ended. Reloading page...',
-                icon: 'warning',
-                timer: 500,
-                showConfirmButton: false,
-                timerProgressBar: true
-            }).then(() => location.reload(true));
-        }
-
-        let sessionTimer = setTimeout(autoRefresh, SESSION_DURATION);
-
-        ['click', 'mousemove', 'keydown'].forEach(evt => {
-            document.addEventListener(evt, () => {
-                clearTimeout(sessionTimer);
-                sessionTimer = setTimeout(autoRefresh, SESSION_DURATION);
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You will be logged out!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, logout!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // redirect to logout URL
+                        window.location.href = logoutLink.href;
+                    }
+                });
             });
         });
-
-
 
     </script>
 
