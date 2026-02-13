@@ -8,11 +8,11 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        width: 138px;
+        width: 130px;
     }
 
     .total-label {
-        font-size: 11px;
+        font-size: 10px;
         color: #6c757d;
         font-weight: 500;
     }
@@ -86,7 +86,7 @@
 
                     </div>
 
-                    <table id="pull_out_table" class="table table-hover mb-0" style="width:100%">
+                    <table id="pull_out_table" class="table table-hover mb-0 pb-0" style="width:100%">
                         <thead class="table-secondary">
                             <tr>
                                 <th style="width: 5%; vertical-align: middle; text-align:center;">NO</th>
@@ -167,7 +167,7 @@
                             <div class="row">
                                 <div class="d-flex justify-content-end">
                                     <button type="button" onclick="handleFormSubmit(currentAction, currentId)"
-                                        id="submitBtn" name="submit" class="btn btn-outline-primary">Add</button>
+                                        id="submitBtn" name="submit" class="btn btn-primary">Add</button>
                                     <button type="button" class="btn btn-danger ms-2" data-bs-dismiss="modal"
                                         id="closeModalBtn">Close</button>
                                 </div>
@@ -189,7 +189,7 @@
         dom:
             "<'top-bar mb-0'lf>" +
             "rt" +
-            "<'d-flex justify-content-between mt-2'<'dataTables_info'i><'dataTables_paginate'p>>",
+            "<'d-flex justify-content-between mt-0 pt-0'<'dataTables_info pt-0'i><'dataTables_paginate pt-0'p>>",
 
         columnDefs: [{ targets: '_all', orderable: true }],
         lengthMenu: [10, 25, 50, 100],
@@ -277,7 +277,7 @@
                 className: 'text-center',
                 render: function (data, type, row) {
                     return `
-                        <button class="btn btn-sm btn-outline-success me-1" onclick='openModal("editPullOut", ${JSON.stringify(row)})'>
+                        <button class="btn btn-sm btn-success me-1" onclick='openModal("editPullOut", ${JSON.stringify(row)})'>
                             <i class="fas fa-edit"></i> Edit
                         </button>
                         <button class="btn btn-sm btn-danger" onclick="deleteBtn('${data}')">
@@ -296,6 +296,8 @@
             $('.customTotals').css({
                 display: 'flex',
                 gap: '10px',
+                position: 'absolute',
+                marginLeft: '160px',
                 justifyContent: 'flex-start',
                 flexGrow: 1
             });

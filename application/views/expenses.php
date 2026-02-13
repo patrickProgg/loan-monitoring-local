@@ -51,7 +51,7 @@
 
                     <div id="customTotalsContainer" style="margin-bottom:10px; display:flex; gap:10px;">
                         <div class="total-box">
-                            <div class="total-label"><i class="bx bx-wallet me-1"></i>Total Amount</div>
+                            <div class="total-label"><i class="bx bx-wallet me-1"></i>Total Expenses</div>
                             <div class="total-value" id="totalAmt">₱0.00</div>
                         </div>
                     </div>
@@ -107,8 +107,7 @@
                                     </div>
 
                                     <div class="col-1">
-                                        <button type="button"
-                                            class="btn btn-sm btn-outline-primary add-row-btn mb-1">+</button>
+                                        <button type="button" class="btn btn-sm btn-primary add-row-btn mb-1">+</button>
                                     </div>
                                 </div>
                             </div>
@@ -124,7 +123,7 @@
 
                         <div class="modal-footer">
                             <button type="button" onclick="handleFormSubmit(currentAction, currentId)" id="submitBtn"
-                                name="submit" class="btn btn-outline-primary">Add</button>
+                                name="submit" class="btn btn-primary">Add</button>
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                         </div>
                     </form>
@@ -142,7 +141,7 @@
         dom:
             "<'top-bar mb-0'lf>" +
             "rt" +
-            "<'d-flex justify-content-between mt-2'<'dataTables_info'i><'dataTables_paginate'p>>",
+            "<'d-flex justify-content-between mt-0 pt-0'<'dataTables_info pt-0'i><'dataTables_paginate pt-0'p>>",
 
         columnDefs: [{ targets: '_all', orderable: true }],
         lengthMenu: [10, 25, 50, 100],
@@ -209,7 +208,7 @@
                 className: 'text-center',
                 render: function (data, type, row) {
                     return `
-                        <button class="btn btn-sm btn-outline-success me-1" onclick='openModal("editExpenses", ${JSON.stringify(row)})'>
+                        <button class="btn btn-sm btn-success me-1" onclick='openModal("editExpenses", ${JSON.stringify(row)})'>
                             <i class="fas fa-edit"></i> Edit
                         </button>
                         <button class="btn btn-sm btn-danger" onclick="deleteBtn('${data}')">
@@ -229,6 +228,8 @@
             $('.customTotals').css({
                 display: 'flex',
                 gap: '10px',
+                position: 'absolute',
+                marginLeft: '160px',
                 justifyContent: 'flex-start',
                 flexGrow: 1
             });
@@ -555,7 +556,7 @@
                         <input type="number" class="form-control expense-amount" placeholder="Amount" />
                     </div>
                     <div class="col-1">
-                        <button type="button" class="btn btn-sm btn-outline-primary add-row-btn mb-1">+</button>
+                        <button type="button" class="btn btn-sm btn-primary add-row-btn mb-1">+</button>
                     </div>
                 </div>
             `);

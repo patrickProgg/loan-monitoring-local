@@ -321,8 +321,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RENTRAP</title>
-    <link rel="icon" type="image/png" href="<?= base_url('assets/images/loan1.png'); ?>">
+    <title>MONITORING</title>
+    <link rel="icon" type="image/png" href="<?= base_url('assets/images/loan.png'); ?>">
 </head>
 
 <div class="container">
@@ -332,27 +332,32 @@
             <img src="<?= base_url(); ?>assets/images/loan.png" style="width: 160px; margin-bottom: 15px;" />
 
             <div class="mb-3 text-start">
-                <label class="form-label text-white">Username</label>
+                <label class="form-label text-black">Username</label>
                 <input type="text" id="username" name="username" class="form-control" placeholder="Enter username">
             </div>
 
             <div class="mb-3 text-start">
-                <label class="form-label text-white">Password</label>
-                <div class="input-group">
-                    <input type="password" id="password" name="password" class="form-control"
+                <label class="form-label text-black">Password</label>
+
+                <div class="position-relative">
+                    <input type="password" id="password" name="password" class="form-control pe-5"
                         placeholder="Enter password">
-                    <!-- <button type="button" class="btn btn-light" onclick="togglePassword()">
-                        <i class="mdi mdi-eye-outline"></i>
-                    </button> -->
+
+                    <button type="button" onclick="togglePassword(event)"
+                        class="btn position-absolute top-50 end-0 translate-middle-y me-3 border-0 bg-transparent p-0">
+
+                        <i class="mdi mdi-eye-outline fs-5"></i>
+                    </button>
                 </div>
             </div>
 
+
             <button class="btn btn-login w-100" id="submit">Log In</button>
 
-            <div class="small-links">
+            <!-- <div class="small-links">
                 <a href="#">Forgot Password?</a>
                 <a href="#">Create Account</a>
-            </div>
+            </div> -->
         </div>
         <div class="footer-text">
             ©
@@ -388,4 +393,18 @@
             }
         });
     });
+
+    function togglePassword(event) {
+        const button = event.currentTarget;
+        const input = button.parentElement.querySelector("input");
+        const icon = button.querySelector("i");
+
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.replace("mdi-eye-outline", "mdi-eye-off-outline");
+        } else {
+            input.type = "password";
+            icon.classList.replace("mdi-eye-off-outline", "mdi-eye-outline");
+        }
+    }
 </script>
