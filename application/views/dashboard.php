@@ -223,7 +223,7 @@
 
 
 <div class="row mb-3">
-    <div class="col-md-8 px-3">
+    <!-- <div class="col-md-8 px-3">
         <div class="card h-100">
             <div class="card-header">
                 <div class="d-flex justify-content-between align-items-center">
@@ -244,7 +244,6 @@
                 <div class="card bg-light">
                     <div class="card-body text-center">
                         <?php
-                        // Format dates for display
                         $display_start = date('M j, Y', strtotime($start_date));
                         $display_end = date('M j, Y', strtotime($end_date));
                         $is_single_day = ($range_type == 'day');
@@ -283,7 +282,6 @@
                     </div>
                 </div>
 
-                <!-- Quick Links -->
                 <div class="mt-3 text-center">
                     <small class="text-muted">
                         Quick select:
@@ -291,13 +289,67 @@
                             class="btn btn-sm btn-outline-secondary">
                             Today
                         </a>
-                        <a href="?selected_date=<?php echo date('Y-m-d'); ?>&range_type=week"
+                        <a href="?selected_date=<?php echo $selected_date; ?>&range_type=week"
                             class="btn btn-sm btn-outline-secondary">
-                            This Week
+                            Week
                         </a>
-                        <a href="?selected_date=<?php echo date('Y-m-d'); ?>&range_type=month"
+                        <a href="?selected_date=<?php echo $selected_date; ?>&range_type=month"
                             class="btn btn-sm btn-outline-secondary">
-                            This Month
+                            Month
+                        </a>
+                    </small>
+
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+    <div class="col-md-8 px-3">
+        <div class="card h-100">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="card-title mb-0" style="display: flex; align-items: center; gap: 10px;">
+                        <span>💰 Payment Filter</span>
+                        <form method="GET" action="" id="dateForm" style="margin: 0;">
+                            <input type="date"
+                                style="width: 150px; display: inline-block; height: 28px; background-color: white; color: #444242; border-radius: 6px; border:1px solid var(--bs-info)"
+                                class="form-control" id="selected_date" name="selected_date"
+                                value="<?php echo $selected_date; ?>">
+                        </form>
+                    </h3>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="card bg-light">
+                    <div class="card-body text-center">
+                        <h4 class="text-muted mb-3" id="dateRangeText">
+                            <!-- Will be updated via AJAX -->
+                        </h4>
+
+                        <div class="display-4 font-weight-bold text-success mb-3" id="rangeTotalDisplay">
+                            <!-- Will be updated via AJAX -->
+                        </div>
+
+                        <div class="text-muted" id="rangeInfoDisplay">
+                            <!-- Will be updated via AJAX -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-3 text-center">
+                    <small class="text-muted">
+                        Quick select:
+                        <a href="#" data-range="day" data-date="<?php echo date('Y-m-d'); ?>"
+                            class="btn btn-sm btn-outline-secondary quick-select">
+                            Today
+                        </a>
+                        <a href="#" data-range="week" data-date="<?php echo $selected_date; ?>"
+                            class="btn btn-sm btn-outline-secondary quick-select">
+                            Week
+                        </a>
+                        <a href="#" data-range="month" data-date="<?php echo $selected_date; ?>"
+                            class="btn btn-sm btn-outline-secondary quick-select">
+                            Month
                         </a>
                     </small>
                 </div>
@@ -1212,7 +1264,7 @@
                 data: {
                     labels: payorNames,
                     datasets: [{
-                        label: 'Performance Score (Higher is Better)',
+                        // label: 'Performance Score (Higher is Better)',
                         data: performanceScores,
                         backgroundColor: function (context) {
                             const chart = context.chart;
@@ -1284,28 +1336,31 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
+                        // legend: {
+                        //     display: true,
+                        //     position: 'top',
+                        //     labels: {
+                        //         font: {
+                        //             size: 12,
+                        //             weight: 'bold'
+                        //         }
+                        //     }
+                        // },
                         legend: {
-                            display: true,
-                            position: 'top',
-                            labels: {
-                                font: {
-                                    size: 12,
-                                    weight: 'bold'
-                                }
-                            }
+                            display: false // This hides the entire legend
                         },
-                        title: {
-                            display: true,
-                            text: 'Top Good Payors - Performance Score Ranking',
-                            font: {
-                                size: 16,
-                                weight: 'bold'
-                            },
-                            padding: {
-                                top: 10,
-                                bottom: 30
-                            }
-                        },
+                        // title: {
+                        //     display: true,
+                        //     text: 'Top Good Payors - Performance Score Ranking',
+                        //     font: {
+                        //         size: 16,
+                        //         weight: 'bold'
+                        //     },
+                        //     padding: {
+                        //         top: 10,
+                        //         bottom: 30
+                        //     }
+                        // },
                         tooltip: {
                             callbacks: {
                                 title: function (context) {
@@ -1336,14 +1391,14 @@
                     scales: {
                         x: {
                             beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Performance Score',
-                                font: {
-                                    size: 13,
-                                    weight: 'bold'
-                                }
-                            },
+                            // title: {
+                            //     display: true,
+                            //     text: 'Performance Score',
+                            //     font: {
+                            //         size: 13,
+                            //         weight: 'bold'
+                            //     }
+                            // },
                             grid: {
                                 color: 'rgba(0, 0, 0, 0.1)'
                             }
@@ -1376,6 +1431,99 @@
 
         // Initialize with horizontal bar chart
         createHorizontalBarChart();
+    });
+
+    $(document).ready(function () {
+        // Handle date input change
+        $('#selected_date').change(function () {
+            const selectedDate = $(this).val();
+            const rangeType = getCurrentRangeType(); // You need to track the current range type
+            loadPaymentFilterData(selectedDate, rangeType);
+        });
+
+        // Handle quick select clicks
+        $('.quick-select').click(function (e) {
+            e.preventDefault();
+            const rangeType = $(this).data('range');
+            const selectedDate = $(this).data('date');
+
+            // Update the date input value
+            $('#selected_date').val(selectedDate);
+
+            // Load data
+            loadPaymentFilterData(selectedDate, rangeType);
+        });
+
+        // Function to load payment filter data
+        function loadPaymentFilterData(selectedDate, rangeType) {
+            $.ajax({
+                url: '<?php echo site_url("View_ui_cont/get_payment_filter_data"); ?>',
+                method: 'GET',
+                data: {
+                    selected_date: selectedDate,
+                    range_type: rangeType
+                },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        updatePaymentFilterUI(response.data);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('AJAX Error:', error);
+                }
+            });
+        }
+
+        // Function to update the UI
+        function updatePaymentFilterUI(data) {
+            // Update date range text
+            let dateRangeHtml = '';
+            if (data.is_single_day) {
+                dateRangeHtml = `Payments for <span class="text-primary">${data.start_date_display}</span>`;
+            } else {
+                dateRangeHtml = `Payments from <span class="text-primary">${data.start_date_display}</span> to <span class="text-primary">${data.end_date_display}</span>`;
+            }
+            $('#dateRangeText').html(dateRangeHtml);
+
+            // Update total amount
+            $('#rangeTotalDisplay').text(data.range_total_formatted);
+
+            // Update range info
+            let rangeInfoHtml = `<i class="fas fa-calendar-alt"></i> `;
+            if (data.is_single_day) {
+                rangeInfoHtml += 'Single day';
+            } else {
+                rangeInfoHtml += data.days_count + ' day' + (data.days_count > 1 ? 's' : '');
+            }
+
+            if (data.is_today) {
+                rangeInfoHtml += ` <span class="badge badge-success ml-2 text-muted">Today</span>`;
+            }
+
+            $('#rangeInfoDisplay').html(rangeInfoHtml);
+
+            // Update quick select links with current selected date
+            $('.quick-select[data-range="week"]').data('date', data.selected_date);
+            $('.quick-select[data-range="month"]').data('date', data.selected_date);
+        }
+
+        // Helper function to get current range type
+        function getCurrentRangeType() {
+            // You can store this in a data attribute or variable
+            // For now, we'll check the active quick select button
+            const activeButton = $('.quick-select.active');
+            if (activeButton.length) {
+                return activeButton.data('range');
+            }
+            return 'day'; // default
+        }
+
+        // Initial load (optional - you can keep the PHP-rendered initial state)
+        // or load via AJAX on page load
+        <?php if (isset($selected_date) && isset($range_type)): ?>
+            loadPaymentFilterData('<?php echo $selected_date; ?>', '<?php echo $range_type; ?>');
+        <?php endif; ?>
     });
 </script>
 
