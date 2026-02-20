@@ -528,6 +528,19 @@ class Monitoring_cont extends CI_Controller
             $recovered = $this->db->update('tbl_expenses', $status);
         }
 
+        if ($recovered && $type === "pull_out") {
+            $record = $this->db->select('total_pull_out')
+                ->where('id', $id)
+                ->get('tbl_pull_out')
+                ->row();
+
+            $total_pull_out = floatval($record->total_pull_out);
+
+            $this->db->set('pull_out_bal', 'pull_out_bal + ' . $total_pull_out, FALSE)
+                ->where('id', 1)
+                ->update('tbl_balance');
+        }
+
         if ($recovered) {
             echo json_encode([
                 'status' => 'success',
@@ -638,7 +651,7 @@ class Monitoring_cont extends CI_Controller
             $sheet->getStyle('A' . $excelRow)->getAlignment()
                 ->setHorizontal(Alignment::HORIZONTAL_CENTER);
             $sheet->setCellValue('B' . $excelRow, $fullName); // Use the capitalized version
-            $sheet->setCellValue('D' . $excelRow, (float) $loan['total_amt']);
+            $sheet->setCellValue('D' . $excelRow, (float) $loan['capital_amt']);
             $sheet->getStyle('D' . $excelRow)->getAlignment()
                 ->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
@@ -646,7 +659,7 @@ class Monitoring_cont extends CI_Controller
         }
 
         // Calculate TOTAL RELEASED in Excel row 33
-        $totalReleased = array_sum(array_column($loanData, 'total_amt'));
+        $totalReleased = array_sum(array_column($loanData, 'capital_amt'));
         $sheet->setCellValue('D33', (float) $totalReleased);
 
         // Apply number formatting to ALL number cells
@@ -1356,7 +1369,7 @@ class Monitoring_cont extends CI_Controller
     private function get_daily_data($selectedDate)
     {
         $this->db->select('
-            a.total_amt,
+            a.capital_amt,
             a.start_date,
             b.full_name
         ');

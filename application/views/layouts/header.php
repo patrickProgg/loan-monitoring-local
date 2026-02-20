@@ -13,6 +13,8 @@
     <link href="<?php echo base_url(); ?>assets/css/daterangepicker.min.css" rel="stylesheet" />
     <link href="<?php echo base_url(); ?>assets/css/jquery.dataTables.min.css" rel="stylesheet" />
     <link href="<?php echo base_url(); ?>assets/css/material.icon.css" rel="stylesheet" />
+    <link href="<?php echo base_url('public/css/styles.css'); ?>" rel="stylesheet">
+
 
     <script src="<?php echo base_url(); ?>assets/js/jquery.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/js/jquery.dataTables.min.js"></script>

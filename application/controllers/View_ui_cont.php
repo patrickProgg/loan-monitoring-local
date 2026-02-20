@@ -8,6 +8,9 @@ class View_ui_cont extends CI_Controller
     {
         parent::__construct();
 
+        date_default_timezone_set('Asia/Manila');
+        // $this->db->query("SET time_zone = '+08:00'");
+
         if (!$this->session->userdata('logged_in')) {
             redirect('login');
         }
@@ -20,6 +23,7 @@ class View_ui_cont extends CI_Controller
 
     public function dashboard()
     {
+
         ini_set('max_execution_time', 300); // 5 minutes
         ini_set('memory_limit', '512M'); // 512MB
 
@@ -57,12 +61,18 @@ class View_ui_cont extends CI_Controller
             ->row()
             ->amt ?? 0;
 
+        // $data['total_pull_out'] = $this->db
+        //     ->select_sum('total_pull_out')
+        //     ->where('status !=', '1')
+        //     ->get('tbl_pull_out')
+        //     ->row()
+        //     ->total_pull_out;
+
         $data['total_pull_out'] = $this->db
-            ->select_sum('total_pull_out')
-            ->where('status !=', '1')
-            ->get('tbl_pull_out')
+            ->select('pull_out_bal')
+            ->get('tbl_balance')
             ->row()
-            ->total_pull_out;
+            ->pull_out_bal;
 
         $data['total_expenses'] = $this->db
             ->select_sum('amt')
@@ -602,6 +612,201 @@ class View_ui_cont extends CI_Controller
             ->from('tbl_payment')
             ->where('payment_for >=', $start_date)
             ->where('payment_for <=', $end_date);
+
+        $query = $this->db->get();
+        $range_total = $query->row()->amt ?: 0;
+
+        // Calculate days count
+        $days = (strtotime($end_date) - strtotime($start_date)) / (60 * 60 * 24) + 1;
+
+        // Prepare response
+        $response = [
+            'success' => true,
+            'data' => [
+                'range_total' => $range_total,
+                'range_total_formatted' => '₱' . number_format($range_total, 2),
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'start_date_display' => date('M j, Y', strtotime($start_date)),
+                'end_date_display' => date('M j, Y', strtotime($end_date)),
+                'selected_date' => $selected_date,
+                'range_type' => $range_type,
+                'is_single_day' => ($range_type == 'day'),
+                'days_count' => $days,
+                'is_today' => ($range_type == 'day' && $selected_date == date('Y-m-d'))
+            ]
+        ];
+
+        header('Content-Type: application/json');
+        echo json_encode($response);
+    }
+    public function get_loan_filter_data()
+    {
+        $selected_date = $this->input->get('selected_date');
+        $range_type = $this->input->get('range_type');
+
+        if (!$selected_date) {
+            $selected_date = date('Y-m-d');
+        }
+
+        if (!$range_type) {
+            $range_type = 'day';
+        }
+
+        // Calculate start and end dates based on range type
+        switch ($range_type) {
+            case 'day':
+                $start_date = $selected_date;
+                $end_date = $selected_date;
+                break;
+            case 'week':
+                $start_date = date('Y-m-d', strtotime('monday this week', strtotime($selected_date)));
+                $end_date = date('Y-m-d', strtotime('sunday this week', strtotime($selected_date)));
+                break;
+            case 'month':
+                $start_date = date('Y-m-01', strtotime($selected_date));
+                $end_date = date('Y-m-t', strtotime($selected_date));
+                break;
+            default:
+                $start_date = $selected_date;
+                $end_date = $selected_date;
+        }
+
+        // Get total payments for the date range
+        $this->db->select_sum('capital_amt')
+            ->from('tbl_loan')
+            ->where('start_date >=', $start_date)
+            ->where('start_date <=', $end_date);
+
+        $query = $this->db->get();
+        $range_total = $query->row()->capital_amt ?: 0;
+
+        // Calculate days count
+        $days = (strtotime($end_date) - strtotime($start_date)) / (60 * 60 * 24) + 1;
+
+        // Prepare response
+        $response = [
+            'success' => true,
+            'data' => [
+                'range_total' => $range_total,
+                'range_total_formatted' => '₱' . number_format($range_total, 2),
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'start_date_display' => date('M j, Y', strtotime($start_date)),
+                'end_date_display' => date('M j, Y', strtotime($end_date)),
+                'selected_date' => $selected_date,
+                'range_type' => $range_type,
+                'is_single_day' => ($range_type == 'day'),
+                'days_count' => $days,
+                'is_today' => ($range_type == 'day' && $selected_date == date('Y-m-d'))
+            ]
+        ];
+
+        header('Content-Type: application/json');
+        echo json_encode($response);
+    }
+    public function get_pullout_filter_data()
+    {
+        $selected_date = $this->input->get('selected_date');
+        $range_type = $this->input->get('range_type');
+
+        if (!$selected_date) {
+            $selected_date = date('Y-m-d');
+        }
+
+        if (!$range_type) {
+            $range_type = 'day';
+        }
+
+        // Calculate start and end dates based on range type
+        switch ($range_type) {
+            case 'day':
+                $start_date = $selected_date;
+                $end_date = $selected_date;
+                break;
+            case 'week':
+                $start_date = date('Y-m-d', strtotime('monday this week', strtotime($selected_date)));
+                $end_date = date('Y-m-d', strtotime('sunday this week', strtotime($selected_date)));
+                break;
+            case 'month':
+                $start_date = date('Y-m-01', strtotime($selected_date));
+                $end_date = date('Y-m-t', strtotime($selected_date));
+                break;
+            default:
+                $start_date = $selected_date;
+                $end_date = $selected_date;
+        }
+
+        // Get total payments for the date range
+        $this->db->select_sum('total_pull_out')
+            ->from('tbl_pull_out')
+            ->where('date_added >=', $start_date)
+            ->where('date_added <=', $end_date);
+
+        $query = $this->db->get();
+        $range_total = $query->row()->total_pull_out ?: 0;
+
+        // Calculate days count
+        $days = (strtotime($end_date) - strtotime($start_date)) / (60 * 60 * 24) + 1;
+
+        // Prepare response
+        $response = [
+            'success' => true,
+            'data' => [
+                'range_total' => $range_total,
+                'range_total_formatted' => '₱' . number_format($range_total, 2),
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'start_date_display' => date('M j, Y', strtotime($start_date)),
+                'end_date_display' => date('M j, Y', strtotime($end_date)),
+                'selected_date' => $selected_date,
+                'range_type' => $range_type,
+                'is_single_day' => ($range_type == 'day'),
+                'days_count' => $days,
+                'is_today' => ($range_type == 'day' && $selected_date == date('Y-m-d'))
+            ]
+        ];
+
+        header('Content-Type: application/json');
+        echo json_encode($response);
+    }
+    public function get_expenses_filter_data()
+    {
+        $selected_date = $this->input->get('selected_date');
+        $range_type = $this->input->get('range_type');
+
+        if (!$selected_date) {
+            $selected_date = date('Y-m-d');
+        }
+
+        if (!$range_type) {
+            $range_type = 'day';
+        }
+
+        // Calculate start and end dates based on range type
+        switch ($range_type) {
+            case 'day':
+                $start_date = $selected_date;
+                $end_date = $selected_date;
+                break;
+            case 'week':
+                $start_date = date('Y-m-d', strtotime('monday this week', strtotime($selected_date)));
+                $end_date = date('Y-m-d', strtotime('sunday this week', strtotime($selected_date)));
+                break;
+            case 'month':
+                $start_date = date('Y-m-01', strtotime($selected_date));
+                $end_date = date('Y-m-t', strtotime($selected_date));
+                break;
+            default:
+                $start_date = $selected_date;
+                $end_date = $selected_date;
+        }
+
+        // Get total payments for the date range
+        $this->db->select_sum('amt')
+            ->from('tbl_expenses')
+            ->where('date_added >=', $start_date)
+            ->where('date_added <=', $end_date);
 
         $query = $this->db->get();
         $range_total = $query->row()->amt ?: 0;

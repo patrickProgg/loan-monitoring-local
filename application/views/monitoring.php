@@ -53,6 +53,21 @@
         background-color: #f8f9fa;
         font-weight: bold;
     }
+
+
+    /* Form control focus effects */
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+
+    /* Quick amount buttons hover */
+    .quick-capital:hover {
+        background-color: #198754;
+        border-color: #198754;
+        color: white;
+    }
 </style>
 
 <section id="content">
@@ -111,87 +126,181 @@
 
         <!-- ADD MODAL -->
         <div class="modal fade" id="addLoaner" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog" style="max-width:600px; margin-top: 10px;">
+            <div class="modal-dialog" style="max-width:700px; margin-top: 10px;">
                 <div class="modal-content">
 
                     <div class="modal-header bg-light border-bottom">
-                        <h5 class="modal-title fw-bold">Client Details</h5>
+                        <h5 class="modal-title fw-bold">
+                            <i class="fas fa-user-plus me-2 text-primary"></i>
+                            Client Details
+                        </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
 
                     <div class="modal-body">
-                        <div class="container">
+                        <div class="container p-0">
+                            <!-- Client Information Card -->
                             <form id="client_form">
-                                <div class="mb-3 row align-items-center">
-                                    <div class="col-md-3 position-relative">
-                                        <label for="acc_no" class="form-label">Acc No.</label>
-                                        <input type="text" class="form-control" placeholder="Enter Acc No." id="acc_no"
-                                            name="acc_no" autocomplete="off">
+                                <div class="card border-0 shadow-sm rounded-4 mb-4">
+                                    <div class="card-header bg-white border-0">
+                                        <h6 class="fw-bold mb-0">
+                                            <i class="fas fa-id-card me-2 text-primary"></i>
+                                            Client Information
+                                        </h6>
                                     </div>
-                                    <div class="col-md-9 position-relative">
-                                        <label for="fullName" class="form-label">Full Name</label>
-                                        <input type="text" class="form-control" placeholder="Enter Fullname"
-                                            id="full_name" name="full_name" autocomplete="off">
+                                    <div class="card-body">
+                                        <div class="row mb-4">
+                                            <div class="col-md-3">
+                                                <label class="form-label fw-bold text-muted small mb-2">
+                                                    <i class="fas fa-hashtag me-1"></i> ACC NO.
+                                                </label>
+                                                <input type="text" class="form-control form-control-lg"
+                                                    placeholder="Enter Acc No." id="acc_no" name="acc_no"
+                                                    autocomplete="off">
+                                            </div>
+                                            <div class="col-md-9">
+                                                <label class="form-label fw-bold text-muted small mb-2">
+                                                    <i class="fas fa-user me-1"></i> FULL NAME
+                                                </label>
+                                                <input type="text" class="form-control form-control-lg"
+                                                    placeholder="Enter Fullname" id="full_name" name="full_name"
+                                                    autocomplete="off">
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label class="form-label fw-bold text-muted small mb-2">
+                                                <i class="fas fa-map-marker-alt me-1"></i> ADDRESS
+                                            </label>
+                                            <input type="text" class="form-control form-control-lg"
+                                                placeholder="Enter Address" id="address" name="address">
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label class="form-label fw-bold text-muted small mb-2">
+                                                    <i class="fas fa-phone me-1"></i> CONTACT #
+                                                </label>
+                                                <input type="text" class="form-control form-control-lg"
+                                                    placeholder="Enter Contact #" id="contact_no_1" name="contact_no_1"
+                                                    autocomplete="off" maxlength="11">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label fw-bold text-muted small mb-2">
+                                                    <i class="fas fa-phone-alt me-1"></i> ALT CONTACT #
+                                                </label>
+                                                <input type="text" class="form-control form-control-lg"
+                                                    placeholder="Enter Contact #" id="contact_no_2" name="contact_no_2"
+                                                    autocomplete="off" maxlength="11">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label fw-bold text-muted small mb-2">
+                                                    <i class="fas fa-calendar-alt me-1"></i> DATE
+                                                </label>
+                                                <input type="date" class="form-control form-control-lg" id="date_added"
+                                                    name="date_added" value="<?= date('Y-m-d') ?>">
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
 
-                                <div class="mb-3 row align-items-center">
-                                    <div class="col-md-12 position-relative">
-                                        <label for="address" class="form-label">Address</label>
-                                        <input type="text" class="form-control" placeholder="Enter Address" id="address"
-                                            name="address">
+                                <!-- Loan Details Card -->
+                                <div class="card border-0 shadow-sm rounded-4">
+                                    <div class="card-header bg-white border-0">
+                                        <h6 class="fw-bold mb-0">
+                                            <i class="fas fa-hand-holding-usd me-2 text-success"></i>
+                                            Loan Details
+                                        </h6>
                                     </div>
-                                </div>
+                                    <div class="card-body">
+                                        <div class="row mb-4">
+                                            <div class="col-md-3">
+                                                <label class="form-label fw-bold text-muted small mb-2">
+                                                    <i class="fas fa-coins me-1"></i> AMOUNT
+                                                </label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text bg-light border-0 fw-bold">₱</span>
+                                                    <input type="number" class="form-control form-control-lg"
+                                                        id="capital_amt" name="capital_amt" placeholder="0.00" min="0"
+                                                        step="0.01">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label fw-bold text-muted small mb-2">
+                                                    <i class="fas fa-percent me-1"></i> INTEREST %
+                                                </label>
+                                                <div class="input-group">
+                                                    <input type="number" class="form-control form-control-lg"
+                                                        id="interest" name="interest" value="15" min="0" step="0.1">
+                                                    <span class="input-group-text bg-light border-0">%</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label fw-bold text-muted small mb-2">
+                                                    <i class="fas fa-plus-circle me-1"></i> ADDED AMOUNT
+                                                </label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text bg-light border-0 fw-bold">₱</span>
+                                                    <input type="number" class="form-control form-control-lg"
+                                                        id="added_amt" name="added_amt" placeholder="0.00" min="0"
+                                                        step="0.01">
+                                                </div>
+                                            </div>
 
-                                <div class="mb-3 row align-items-center">
-                                    <div class="col-md-4 position-relative">
-                                        <label for="fullName" class="form-label">Contact #</label>
-                                        <input type="text" class="form-control" placeholder="Enter Contact #"
-                                            id="contact_no_1" name="contact_no_1" autocomplete="off" maxlength="11">
-                                    </div>
-                                    <div class="col-md-4 position-relative">
-                                        <label for="fullName" class="form-label">Alt Contact #</label>
-                                        <input type="text" class="form-control" placeholder="Enter Contact #"
-                                            id="contact_no_2" name="contact_no_2" autocomplete="off" maxlength="11">
-                                    </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label fw-bold text-muted small mb-2">
+                                                    <i class="fas fa-calculator me-1"></i> TOTAL AMOUNT
+                                                </label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text bg-light border-0 fw-bold">₱</span>
+                                                    <input type="text"
+                                                        class="form-control form-control-lg fw-bold text-success"
+                                                        id="total_amt" name="total_amt" readonly
+                                                        style="background-color: #f8f9fa;">
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                    <div class="col-md-4 position-relative">
-                                        <label for="date" class="form-label">Date</label>
-                                        <input type="date" class="form-control" id="date_added" name="date_added"
-                                            value="<?= date('Y-m-d') ?>">
-                                    </div>
-                                </div>
+                                        <div>
+                                            <label class="form-label fw-bold text-muted small mb-2">
+                                                <i class="fas fa-bolt me-1"></i> QUICK SELECT AMOUNT
+                                            </label>
+                                            <div class="d-flex gap-2 flex-wrap">
+                                                <button type="button"
+                                                    class="btn btn-outline-success btn-sm quick-capital"
+                                                    data-amount="1000">₱1,000</button>
+                                                <button type="button"
+                                                    class="btn btn-outline-success btn-sm quick-capital"
+                                                    data-amount="2000">₱2,000</button>
+                                                <button type="button"
+                                                    class="btn btn-outline-success btn-sm quick-capital"
+                                                    data-amount="3000">₱3,000</button>
+                                                <button type="button"
+                                                    class="btn btn-outline-success btn-sm quick-capital"
+                                                    data-amount="5000">₱5,000</button>
+                                                <button type="button"
+                                                    class="btn btn-outline-success btn-sm quick-capital"
+                                                    data-amount="10000">₱10,000</button>
+                                                <button type="button"
+                                                    class="btn btn-outline-success btn-sm quick-capital"
+                                                    data-amount="20000">₱20,000</button>
+                                            </div>
+                                        </div>
 
-                                <div class="mb-3 row">
-                                    <div class="col-md-3">
-                                        <label for="position" class="form-label">Amount</label>
-                                        <input type="number" class="form-control" id="capital_amt" name="capital_amt"
-                                            placeholder="Enter Amount">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="department" class="form-label">Interest %</label>
-                                        <input type="text" class="form-control" id="interest" name="interest"
-                                            value="15">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="department" class="form-label">Added Amount</label>
-                                        <input type="number" class="form-control" id="added_amt" name="added_amt"
-                                            placeholder="Enter Added Amount">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="department" class="form-label">Total Amount</label>
-                                        <input type="number" class="form-control" id="total_amt" name="total_amt"
-                                            readonly>
                                     </div>
                                 </div>
                             </form>
 
                             <div class="row">
                                 <div class="d-flex justify-content-end">
-                                    <button type="button" id="add_client" name="submit"
-                                        class="btn btn-primary">Add</button>
-                                    <button type="button" class="btn btn-danger ms-2" data-bs-dismiss="modal"
-                                        id="closeModalBtn">Close</button>
+                                    <button type="button" id="add_client" name="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-1"></i> Save Client
+                                    </button>
+                                    <button type="button" class="btn btn-light ms-2" data-bs-dismiss="modal"
+                                        id="closeModalBtn">
+                                        <i class="fas fa-times me-1"></i> Cancel
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -204,68 +313,102 @@
 
         <!-- EDIT MODAL -->
         <div class="modal fade" id="editLoaner" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog" style="max-width:600px;  margin-top: 10px;">
+            <div class="modal-dialog" style="max-width:700px; margin-top: 10px;">
                 <div class="modal-content">
 
                     <div class="modal-header bg-light border-bottom">
-                        <h5 class="modal-title fw-bold">Details</h5>
+                        <h5 class="modal-title fw-bold">
+                            <i class="fas fa-edit me-2 text-primary"></i>
+                            Edit Client Details
+                        </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
 
                     <div class="modal-body">
-                        <div class="container">
-                            <form id="edit_client_form">
-                                <div class="mb-3 row align-items-center">
-                                    <div class="col-md-3 position-relative">
-                                        <label for="edit_acc_no" class="form-label">Acc No.</label>
-                                        <input type="text" class="form-control" placeholder="Enter Acc No."
-                                            id="edit_acc_no" name="edit_acc_no" autocomplete="off">
-                                    </div>
-                                    <div class="col-md-9 position-relative">
-                                        <label for="fullName" class="form-label">Full Name</label>
-                                        <input type="text" class="form-control" placeholder="Enter Fullname"
-                                            id="edit_full_name" name="edit_full_name" autocomplete="off">
-                                    </div>
+                        <div class="container p-0">
+                            <!-- Hidden ID field -->
+                            <input type="hidden" id="edit_client_id" name="edit_client_id">
+
+                            <!-- Client Information Card -->
+                            <div class="card border-0 shadow-sm rounded-4">
+                                <div class="card-header bg-white border-0">
+                                    <h6 class="fw-bold mb-0">
+                                        <i class="fas fa-id-card me-2 text-primary"></i>
+                                        Client Information
+                                    </h6>
                                 </div>
+                                <div class="card-body">
+                                    <form id="edit_client_form">
+                                        <div class="row mb-4">
+                                            <div class="col-md-3">
+                                                <label class="form-label fw-bold text-muted small mb-2">
+                                                    <i class="fas fa-hashtag me-1"></i> ACC NO.
+                                                </label>
+                                                <input type="text" class="form-control form-control-lg"
+                                                    placeholder="Enter Acc No." id="edit_acc_no" name="edit_acc_no"
+                                                    autocomplete="off">
+                                            </div>
+                                            <div class="col-md-9">
+                                                <label class="form-label fw-bold text-muted small mb-2">
+                                                    <i class="fas fa-user me-1"></i> FULL NAME
+                                                </label>
+                                                <input type="text" class="form-control form-control-lg"
+                                                    placeholder="Enter Fullname" id="edit_full_name"
+                                                    name="edit_full_name" autocomplete="off">
+                                            </div>
+                                        </div>
 
-                                <div class="mb-3 row align-items-center">
-                                    <div class="col-md-12 position-relative">
-                                        <label for="address" class="form-label">Address</label>
-                                        <input type="text" class="form-control" placeholder="Enter Address"
-                                            id="edit_address" name="edit_address">
-                                    </div>
+                                        <div class="mb-4">
+                                            <label class="form-label fw-bold text-muted small mb-2">
+                                                <i class="fas fa-map-marker-alt me-1"></i> ADDRESS
+                                            </label>
+                                            <input type="text" class="form-control form-control-lg"
+                                                placeholder="Enter Address" id="edit_address" name="edit_address">
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label class="form-label fw-bold text-muted small mb-2">
+                                                    <i class="fas fa-phone me-1"></i> CONTACT #
+                                                </label>
+                                                <input type="text" class="form-control form-control-lg"
+                                                    placeholder="Enter Contact #" id="edit_contact_no_1"
+                                                    name="edit_contact_no_1" autocomplete="off" maxlength="11">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label fw-bold text-muted small mb-2">
+                                                    <i class="fas fa-phone-alt me-1"></i> ALT CONTACT #
+                                                </label>
+                                                <input type="text" class="form-control form-control-lg"
+                                                    placeholder="Enter Contact #" id="edit_contact_no_2"
+                                                    name="edit_contact_no_2" autocomplete="off" maxlength="11">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label fw-bold text-muted small mb-2">
+                                                    <i class="fas fa-calendar-alt me-1"></i> DATE STARTED
+                                                </label>
+                                                <input type="date" class="form-control form-control-lg"
+                                                    id="edit_start_date" name="edit_start_date"
+                                                    value="<?= date('Y-m-d') ?>">
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
+                            </div>
 
-                                <div class="mb-3 row align-items-center">
-                                    <div class="col-md-4 position-relative">
-                                        <label for="fullName" class="form-label">Contact #</label>
-                                        <input type="text" class="form-control" placeholder="Enter Contact #"
-                                            id="edit_contact_no_1" name="edit_contact_no_1" autocomplete="off"
-                                            maxlength="11">
-                                    </div>
-                                    <div class="col-md-4 position-relative">
-                                        <label for="fullName" class="form-label">Alt Contact #</label>
-                                        <input type="text" class="form-control" placeholder="Enter Contact #"
-                                            id="edit_contact_no_2" name="edit_contact_no_2" autocomplete="off"
-                                            maxlength="11">
-                                    </div>
-
-                                    <div class="col-md-4 position-relative">
-                                        <label for="date" class="form-label">Date</label>
-                                        <input type="date" class="form-control" id="edit_start_date"
-                                            name="edit_start_date" value="<?= date('Y-m-d') ?>">
-                                    </div>
-                                </div>
-                            </form>
-
+                            <!-- Action Buttons -->
                             <div class="row">
-                                <div class="d-flex justify-content-end">
-                                    <button type="button" id="deleteBtn"
-                                        class="btn btn-outline-danger me-2">Delete</button>
-                                    <button type="button" id="update_client" name="submit"
-                                        class="btn btn-primary ">Update</button>
-                                    <button type="button" class="btn btn-danger ms-2" data-bs-dismiss="modal"
-                                        id="closeModalBtn">Close</button>
+                                <div class="d-flex justify-content-end align-items-center">
+                                    <button type="button" id="deleteBtn" class="btn btn-outline-danger me-auto">
+                                        <i class="fas fa-trash-alt me-1"></i> Delete
+                                    </button>
+                                    <button type="button" id="update_client" name="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-1"></i> Update
+                                    </button>
+                                    <button type="button" class="btn btn-light ms-2" data-bs-dismiss="modal"
+                                        id="closeModalBtn">
+                                        <i class="fas fa-times me-1"></i> Cancel
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -274,160 +417,196 @@
                 </div>
             </div>
         </div>
+
         <!-- EDIT MODAL -->
 
         <!-- VIEW MODAL -->
         <div class="modal fade" id="viewLoaner" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog" style="max-width:1200px; margin-top: 10px;">
-                <div class="table-data">
-                    <div class="modal-content">
-                        <div class="modal-body pb-0">
-                            <div class="container">
-                                <div class="row g-3" style="font-size: 14px;">
-                                    <div class="col-md-5">
-                                        <div class="row">
-                                            <div class="col-3">
-                                                <label class="form-label">No :
-                                                    <span id="header_acc_no" style="font-weight: bold;"></span>
-                                                </label>
-                                            </div>
+            <div class="modal-dialog modal-xl" style="margin-top: 10px;">
+                <div class="modal-content">
+                    <!-- Header -->
+                    <div class="modal-header bg-light border-bottom">
+                        <h5 class="modal-title fw-bold">
+                            <i class="fas fa-file-invoice me-2 text-primary"></i>
+                            Loan Details
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
 
-                                            <div class="col-9">
-                                                <label class="form-label">Full Name:
-                                                    <span id="header_name" style="font-weight: bold;"></span>
-                                                </label>
+                    <!-- Body -->
+                    <div class="modal-body px-3 pb-0">
+                        <div class="container-fluid px-0">
+                            <div class="card border-0 shadow-sm rounded-3 mb-4">
+                                <div class="card-body pb-0 pt-0">
+                                    <div class="row g-2">
+                                        <div class="col-md-4">
+                                            <div class="border-start border-3 border-primary ps-3">
+                                                <h6 class="text-primary mb-3"><i class="fas fa-user me-2"></i>Client
+                                                    Information</h6>
+                                                <table class="table table-sm table-borderless">
+                                                    <tr>
+                                                        <td class="text-muted ps-0" width="30%">Acc No:</td>
+                                                        <td class="fw-bold" id="header_acc_no">—</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-muted ps-0">Full Name:</td>
+                                                        <td class="fw-bold" id="header_name">—</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-muted ps-0">Address:</td>
+                                                        <td class="fw-bold" id="header_address">—</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-muted ps-0">Loan Date:</td>
+                                                        <td class="fw-bold" id="header_loan_date">—</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-muted ps-0">Due Date:</td>
+                                                        <td class="fw-bold" id="header_due_date">—</td>
+                                                    </tr>
+                                                </table>
                                             </div>
                                         </div>
 
-                                        <div class="mb-2">
-                                            <label class="form-label">Address :
-                                                <span id="header_address" style="font-weight: bold;"></span>
-                                            </label>
+                                        <!-- Loan Details -->
+                                        <div class="col-md-4">
+                                            <div class="border-start border-3 border-success ps-3">
+                                                <h6 class="text-success mb-3"><i class="fas fa-coins me-2"></i>Loan
+                                                    Details</h6>
+                                                <table class="table table-sm table-borderless">
+                                                    <tr>
+                                                        <td class="text-muted ps-0" width="45%">Capital Amt:</td>
+                                                        <td class="fw-bold text-primary">₱ <span
+                                                                id="header_capital_amt">0.00</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-muted ps-0">Interest:</td>
+                                                        <td class="fw-bold"><span id="header_interest">0</span>%</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-muted ps-0">Added Amt:</td>
+                                                        <td class="fw-bold text-info">₱ <span
+                                                                id="header_added_amt">0.00</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-muted ps-0">Status:</td>
+                                                        <td class="fw-bold"><span id="header_status">Active</span></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
                                         </div>
-                                        <div class="mb-2">
-                                            <label class="form-label">Loan Date :
-                                                <span id="header_loan_date" style="font-weight: bold;"></span>
-                                            </label>
+
+                                        <!-- Financial Summary -->
+                                        <div class="col-md-4">
+                                            <div class="border-start border-3 border-danger ps-3">
+                                                <h6 class="text-danger mb-3"><i
+                                                        class="fas fa-chart-line me-2"></i>Summary</h6>
+                                                <table class="table table-sm table-borderless">
+                                                    <tr>
+                                                        <td class="text-muted ps-0" width="50%">Total Amt:</td>
+                                                        <td class="fw-bold text-success">₱ <span
+                                                                id="header_total_amt">0.00</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-muted ps-0">Running Bal:</td>
+                                                        <td class="fw-bold text-danger">₱ <span
+                                                                id="header_running_balance">0.00</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-muted ps-0">Date Closed:</td>
+                                                        <td class="fw-bold text-secondary" id="header_date_completed">—
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td colspan="2" class="p-0 border-0">
+                                                            <div
+                                                                class="d-flex align-items-center justify-content-end gap-2 mt-2 py-2 border-top">
+                                                                <!-- Date Filter -->
+                                                                <div class="dropdown" style="width: 167px;">
+                                                                    <button
+                                                                        class="btn btn-sm btn-outline-secondary dropdown-toggle w-100 text-start"
+                                                                        type="button" id="dateDropdownBtn"
+                                                                        data-bs-toggle="dropdown" aria-expanded="false"
+                                                                        style="height: 30px;">
+                                                                        Select Date Range
+                                                                    </button>
+                                                                    <ul class="dropdown-menu" id="header_date_arr"
+                                                                        style="max-height: 200px; overflow-y: auto; z-index: 9999;">
+                                                                        <!-- Options will be appended here -->
+                                                                    </ul>
+                                                                </div>
+
+                                                                <button class="btn btn-sm btn-success"
+                                                                    id="editLoanDetails">
+                                                                    <i class="fas fa-edit me-1"></i> Edit
+                                                                </button>
+                                                                <button class="btn btn-sm btn-danger" id="cancelEdit"
+                                                                    style="display: none;">
+                                                                    <i class="fas fa-times me-1"></i> Cancel
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <label class="form-label">Due Date :
-                                                <span id="header_due_date" style="font-weight: bold;"></span>
-                                            </label>
-                                        </div>
-                                        <input type="hidden" id="header_id">
-                                        <input type="hidden" id="header_loan_id">
                                     </div>
 
-                                    <div class="col-md-4">
-                                        <div class="mb-2">
-                                            <label class="form-label">
-                                                Capital Amt : ₱ <span id="header_capital_amt"
-                                                    style="font-weight: bold;"></span>
-                                            </label>
-                                        </div>
-                                        <div class="mb-2">
-                                            <label class="form-label">
-                                                Interest : % <span id="header_interest"
-                                                    style="font-weight: bold;"></span>
-                                            </label>
-                                        </div>
-                                        <div class="mb-2">
-                                            <label class="form-label">
-                                                Added Amt : ₱ <span id="header_added_amt"
-                                                    style="font-weight: bold;"></span>
-                                            </label>
-                                        </div>
-                                        <div>
-                                            <label class="form-label">
-                                                Status : <span id="header_status" style="font-weight: bold;"
-                                                    class="status"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <div class="mb-2">
-                                            <label class="form-label">
-                                                Total Amt : ₱ <span id="header_total_amt" style="font-weight: bold;"
-                                                    class="text-primary"></span>
-                                            </label>
-                                        </div>
-                                        <div class="mb-2">
-                                            <label class="form-label">
-                                                Running Bal : ₱ <span id="header_running_balance"
-                                                    style="font-weight: bold;" class="text-danger"></span>
-                                            </label>
-                                        </div>
-                                        <div>
-                                            <label class="form-label">
-                                                Date Closed : <span id="header_date_completed"
-                                                    style="font-weight: bold;" class="text-secondary"></span>
-                                            </label>
-                                        </div>
-                                        <div style="display: flex; align-items: center; gap: 5px;">
-                                            <!-- <select id="header_date_arr" class="form-select form-select-sm me-2"
-                                                style="cursor:pointer; width: 200px; height: 30px">
-                                            </select> -->
-
-                                            <div class="dropdown" style="width: 167px;">
-                                                <button
-                                                    class="btn btn-sm btn-outline-secondary dropdown-toggle w-100 text-start"
-                                                    type="button" id="dateDropdownBtn" data-bs-toggle="dropdown"
-                                                    aria-expanded="false" style="height: 30px;">
-                                                    Select Date Range
-                                                </button>
-                                                <ul class="dropdown-menu" id="header_date_arr"
-                                                    style="max-height: 200px; overflow-y: auto; z-index: 9999;">
-                                                    <!-- Options will be appended here -->
-                                                </ul>
-                                            </div>
-
-                                            <button class="btn btn-sm btn-success" id="editLoanDetails">
-                                                <i class="fas fa-edit"></i> Edit
-                                            </button>
-                                            <button class="btn btn-sm btn-danger" id="cancelEdit" style="display:none;">
-                                                <i class="fas fa-times"></i>
-                                            </button>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="table-data">
-                            <div class="order pt-0 pb-0" style="max-height: 400px; overflow-y: auto; color:">
-                                <table id="payment_table" class="table pt-0 pb-0 mt-0 mb-0 table-bordered">
-                                    <thead class="sticky-top">
-                                        <tr>
-                                            <th class="text-center" style="width:10%; color:var(--dark);">NO.#</th>
-                                            <th class="text-center" style="width:30%; color:var(--dark);">DAY</th>
-                                            <th class="text-center" style="width:30%; color:var(--dark);">PAYMENT</th>
-                                            <th class="text-center" style="width:30%; color:var(--dark);">ACTION</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-
-                            </div>
+                    <div class="px-3 pb-3">
+                        <div class="table-responsive"
+                            style="max-height: 365px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 8px;">
+                            <table id="payment_table" class="table table-sm table-hover mb-0">
+                                <thead class="table-light sticky-top"
+                                    style="background-color: #f8f9fa; height:40px; vertical-align: middle;">
+                                    <tr>
+                                        <th class="text-center" style="width:10%;">#</th>
+                                        <th class="text-center" style="width:30%;">DATE</th>
+                                        <th class="text-center" style="width:30%;">PAYMENT</th>
+                                        <th class="text-center" style="width:30%;">ACTION</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="paymentTableBody">
+                                    <tr>
+                                        <td colspan="4" class="text-center py-4 text-muted">
+                                            <i class="fas fa-inbox fa-2x mb-2"></i><br>
+                                            No payment records found
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
 
-                        <div class="modal-footer d-flex justify-content-between align-items-center">
-                            <div class="text-end" style="width:610px">
-                                TOTAL PAYMENT : ₱ <span class="text-primary" id="total_payment"
-                                    style="font-weight: bold; "></span>
+                        <div class="d-flex justify-content-between align-items-center w-100 pt-3">
+                            <div class="bg-light rounded-3 px-4 py-2">
+                                <span class="text-muted me-2">Total Payments:</span>
+                                <span class="fw-bold text-primary fs-5">₱ <span id="total_payment">0.00</span></span>
                             </div>
-
                             <div>
-                                <button type="button" id="addNewLoan" class="btn btn-primary me-1"
+                                <button type="button" id="addNewLoan" class="btn btn-primary me-2"
                                     onclick="openAddNewLoanModal()">
-                                    Add New
+                                    <i class="fas fa-plus me-1"></i> New Loan
                                 </button>
-                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-                                    Close
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                                    <i class="fas fa-times me-1"></i> Close
                                 </button>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Footer -->
+                    <!-- <div class="modal-footer"> -->
+
+                    <!-- </div> -->
+
+                    <!-- Hidden Fields -->
+                    <input type="hidden" id="header_id">
+                    <input type="hidden" id="header_loan_id">
                 </div>
             </div>
         </div>
@@ -481,42 +660,134 @@
         <!-- ADD LOAN SAME CLIENT -->
         <div class="modal fade" id="addLoanSameClient" tabindex="-1" aria-hidden="true" data-bs-backdrop="static"
             data-bs-keyboard="false">
-            <div class="modal-dialog" style="margin-top:10px">
+            <div class="modal-dialog" style="max-width:600px; margin-top:10px">
                 <div class="modal-content">
                     <div class="modal-header bg-light border-bottom">
-                        <h5 class="modal-title">Loan Details</h5>
+                        <h5 class="modal-title fw-bold">
+                            <i class="fas fa-hand-holding-usd me-2 text-success"></i>
+                            New Loan for Existing Client
+                        </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
 
-                    <div class="modal-body">
-                        <div class="row g-2">
-                            <div class="col-4">
-                                <label>Capital Amt</label>
-                                <input id="add_capital_amt" type="number" class="form-control" />
-                                <input id="new_type" type="hidden" />
+                    <div class="modal-body pb-0">
+                        <div class="container p-0">
+                            <!-- Loan Details Card -->
+                            <div class="card border-0 shadow-sm rounded-4">
+                                <div class="card-header bg-white border-0">
+                                    <h6 class="fw-bold mb-0">
+                                        <i class="fas fa-calculator me-2 text-success"></i>
+                                        Loan Details
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-3">
+                                        <!-- Capital Amount -->
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold text-muted small mb-2">
+                                                <i class="fas fa-coins me-1"></i> CAPITAL AMOUNT
+                                            </label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-light border-0 fw-bold">₱</span>
+                                                <input id="add_capital_amt" type="number"
+                                                    class="form-control form-control-lg" placeholder="0.00" min="0"
+                                                    step="0.01" />
+                                            </div>
+                                        </div>
+
+                                        <!-- Interest Rate -->
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold text-muted small mb-2">
+                                                <i class="fas fa-percent me-1"></i> INTEREST RATE
+                                            </label>
+                                            <div class="input-group">
+                                                <input id="add_interest" type="number"
+                                                    class="form-control form-control-lg" value="15" min="0"
+                                                    step="0.1" />
+                                                <span class="input-group-text bg-light border-0">%</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Added Amount (Auto-calculated) -->
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold text-muted small mb-2">
+                                                <i class="fas fa-plus-circle me-1"></i> ADDED AMOUNT
+                                            </label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-light border-0 fw-bold">₱</span>
+                                                <input id="add_added_amt" type="number"
+                                                    class="form-control form-control-lg" />
+                                            </div>
+
+                                        </div>
+
+                                        <!-- Total Amount -->
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold text-muted small mb-2">
+                                                <i class="fas fa-calculator me-1"></i> TOTAL AMOUNT
+                                            </label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-light border-0 fw-bold">₱</span>
+                                                <input id="add_total_amt" type="text"
+                                                    class="form-control form-control-lg fw-bold text-success" readonly
+                                                    style="background-color: #f8f9fa;" />
+                                            </div>
+                                            <small class="text-muted">Auto-calculated</small>
+                                        </div>
+
+                                        <!-- Start Date -->
+                                        <div class="col-md-12">
+                                            <label class="form-label fw-bold text-muted small mb-2">
+                                                <i class="fas fa-calendar-alt me-1"></i> NEW START DATE
+                                            </label>
+                                            <input id="add_start_date" type="date" class="form-control form-control-lg"
+                                                value="<?= date('Y-m-d') ?>" />
+                                        </div>
+                                    </div>
+
+                                    <!-- Quick Amount Selector -->
+                                    <div class="mt-4">
+                                        <label class="form-label fw-bold text-muted small mb-2">
+                                            <i class="fas fa-bolt me-1"></i> QUICK SELECT AMOUNT
+                                        </label>
+                                        <div class="d-flex gap-2 flex-wrap">
+                                            <button type="button"
+                                                class="btn btn-outline-success btn-sm quick-loan-amount"
+                                                data-amount="1000">₱1,000</button>
+                                            <button type="button"
+                                                class="btn btn-outline-success btn-sm quick-loan-amount"
+                                                data-amount="2000">₱2,000</button>
+                                            <button type="button"
+                                                class="btn btn-outline-success btn-sm quick-loan-amount"
+                                                data-amount="3000">₱3,000</button>
+                                            <button type="button"
+                                                class="btn btn-outline-success btn-sm quick-loan-amount"
+                                                data-amount="5000">₱5,000</button>
+                                            <button type="button"
+                                                class="btn btn-outline-success btn-sm quick-loan-amount"
+                                                data-amount="10000">₱10,000</button>
+                                            <button type="button"
+                                                class="btn btn-outline-success btn-sm quick-loan-amount"
+                                                data-amount="20000">₱20,000</button>
+                                        </div>
+                                    </div>
+
+                                </div>
                             </div>
-                            <div class="col-4">
-                                <label>Interest (%)</label>
-                                <input id="add_interest" type="number" class="form-control" value="15" />
-                            </div>
-                            <div class="col-4">
-                                <label>Added Amt</label>
-                                <input id="add_added_amt" type="number" class="form-control" />
-                            </div>
-                            <div class="col-6">
-                                <label>Total Amt</label>
-                                <input id="add_total_amt" type="number" class="form-control" />
-                            </div>
-                            <div class="col-6">
-                                <label>New Start Date</label>
-                                <input id="add_start_date" type="date" class="form-control" />
-                            </div>
+
+                            <!-- Hidden Fields -->
+                            <input id="new_type" type="hidden" />
+                            <input id="client_id" type="hidden" />
                         </div>
                     </div>
 
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="addLoanBtn">Continue</button>
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-success" id="addLoanBtn">
+                            <i class="fas fa-check-circle me-1"></i> Process Loan
+                        </button>
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-1"></i> Cancel
+                        </button>
                     </div>
                 </div>
             </div>
@@ -695,6 +966,8 @@
         var amt = $("#capital_amt").val();
         var interest = $("#interest").val();
 
+        console.log(amt);
+
         if (!name || !amt || !interest) {
             Swal.fire({ icon: 'error', title: 'Oops...', text: 'All fields are required' });
             return;
@@ -741,6 +1014,18 @@
                 });
             }
         });
+    });
+
+    $('.quick-capital').click(function () {
+        let amount = $(this).data('amount');
+        $('#capital_amt').val(amount);
+
+        // Optional: Trigger change event to update calculations
+        $('#capital_amt').trigger('input');
+
+        // Optional: Add visual feedback
+        $(this).addClass('active').siblings().removeClass('active');
+        calculateTotal();
     });
 
     $('#client_form').on('keypress', function (e) {
@@ -1436,6 +1721,17 @@
     function openAddNewLoanModal() {
         $('#addLoanSameClient').modal('show');
 
+
+        $('.quick-loan-amount').click(function () {
+            let amount = $(this).data('amount');
+            $('#add_capital_amt').val(amount).trigger('input');
+
+            // Visual feedback
+            $(this).addClass('active').siblings().removeClass('active');
+
+            calculateNewTotal();
+        });
+
         function calculateNewTotal() {
             let capital = parseFloat($('#add_capital_amt').val()) || 0;
             let interest = parseFloat($('#add_interest').val()) || 0;
@@ -1649,7 +1945,7 @@
                         title: 'Success!',
                         text: response.message,
                         showConfirmButton: false,
-                        timer: 500,
+                        timer: 800,
                         timerProgressBar: true,
                     });
 
@@ -1667,6 +1963,7 @@
         $('#cancelEdit').off('click').on('click', function () {
             const btn = $('#editLoanDetails');
             const original = btn.data('original');
+            $('#dateDropdownBtn').prop('disabled', false);
 
             if (!original) return;
 
