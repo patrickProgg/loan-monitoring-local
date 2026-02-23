@@ -526,6 +526,16 @@
             cancelButtonText: 'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
+
+                Swal.fire({
+                    title: 'Recovering...',
+                    html: 'Please wait while data is being recovered.',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
                 $.ajax({
                     url: "<?php echo base_url('Monitoring_cont/recover_id'); ?>",
                     type: 'POST',
@@ -535,12 +545,14 @@
                     },
                     dataType: 'json',
                     success: function (res) {
+                        Swal.close();
                         Swal.fire({
                             title: 'Recovered!',
                             text: res.message,
                             icon: 'success',
-                            timer: 500,
-                            showConfirmButton: false
+                            timer: 800,
+                            showConfirmButton: false,
+                            timerProgressBar: true
                         }).then(() => {
                             if (type === "client") {
                                 client_table.ajax.reload();
@@ -552,6 +564,7 @@
                         });
                     },
                     error: function (err) {
+                        Swal.close();
                         console.log(err);
                         Swal.fire('Error', 'Server error. Check console.', 'error');
                     }
