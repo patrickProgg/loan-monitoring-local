@@ -1116,15 +1116,15 @@ class Monitoring_cont extends CI_Controller
     {
         // Get Monday and Sunday of the week
         $monday = date('Y-m-d', strtotime('monday this week', strtotime($selectedDate)));
-        $saturday = date('Y-m-d', strtotime('saturday this week', strtotime($selectedDate)));
+        $sunday = date('Y-m-d', strtotime('sunday this week', strtotime($selectedDate)));
 
         // Format the range
         $startMonth = date('M', strtotime($monday));
-        $endMonth = date('M', strtotime($saturday));
+        $endMonth = date('M', strtotime($sunday));
         $startDay = date('j', strtotime($monday));
-        $endDay = date('j', strtotime($saturday));
+        $endDay = date('j', strtotime($sunday));
         $startYear = date('Y', strtotime($monday));
-        $endYear = date('Y', strtotime($saturday));
+        $endYear = date('Y', strtotime($sunday));
 
         if ($startMonth === $endMonth && $startYear === $endYear) {
             // Same month and year: "Feb 9 - 14, 2026"
@@ -1405,7 +1405,7 @@ class Monitoring_cont extends CI_Controller
     private function get_weekly_data($selectedDate)
     {
         $monday = date('Y-m-d', strtotime('monday this week', strtotime($selectedDate)));
-        $saturday = date('Y-m-d', strtotime('saturday this week', strtotime($selectedDate)));
+        $sunday = date('Y-m-d', strtotime('sunday this week', strtotime($selectedDate)));
 
         // Query for payments (existing)
         $this->db->select('SUM(a.amt) as total_amt');
@@ -1414,7 +1414,7 @@ class Monitoring_cont extends CI_Controller
         $this->db->join('tbl_client as c', 'c.id = b.cl_id');
         $this->db->where('c.status !=', '1');
         $this->db->where("a.payment_for >=", $monday);
-        $this->db->where("a.payment_for <=", $saturday);
+        $this->db->where("a.payment_for <=", $sunday);
         $payment_query = $this->db->get();
         $payment_result = $payment_query->row_array();
 
@@ -1424,7 +1424,7 @@ class Monitoring_cont extends CI_Controller
         $this->db->join('tbl_client', 'tbl_client.id = tbl_loan.cl_id');
         $this->db->where('tbl_client.status !=', '1');
         $this->db->where("start_date >=", $monday);
-        $this->db->where("start_date <=", $saturday);
+        $this->db->where("start_date <=", $sunday);
         $loan_query = $this->db->get();
         $loan_result = $loan_query->row_array();
 
@@ -1437,7 +1437,7 @@ class Monitoring_cont extends CI_Controller
     private function get_weekly_expenses($selectedDate)
     {
         $monday = date('Y-m-d', strtotime('monday this week', strtotime($selectedDate)));
-        $saturday = date('Y-m-d', strtotime('saturday this week', strtotime($selectedDate)));
+        $sunday = date('Y-m-d', strtotime('sunday this week', strtotime($selectedDate)));
 
         $this->db->select('
            sum(amt) as total_exp
@@ -1446,7 +1446,7 @@ class Monitoring_cont extends CI_Controller
         $this->db->from('tbl_expenses');
         $this->db->where('status !=', '1');
         $this->db->where("date_added >=", $monday);
-        $this->db->where("date_added <=", $saturday);
+        $this->db->where("date_added <=", $sunday);
 
         $query = $this->db->get();
         return $query->row_array();
