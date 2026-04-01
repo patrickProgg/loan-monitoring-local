@@ -51,6 +51,14 @@ class View_ui_cont extends CI_Controller
             ->row()
             ->total_amt ?: 0;
 
+        $data['total_capital_loan_amt'] = $this->db
+            ->select_sum('tbl_loan.capital_amt')
+            ->from('tbl_loan')
+            ->join('tbl_client', 'tbl_loan.cl_id = tbl_client.id')
+            ->get()
+            ->row()
+            ->capital_amt ?: 0;
+
         $data['total_loan_payment'] = $this->db
             ->select_sum('tbl_payment.amt')
             ->join('tbl_loan', 'tbl_loan.id = tbl_payment.loan_id')
@@ -134,7 +142,7 @@ class View_ui_cont extends CI_Controller
             // Add bonuses
             $score += $payor['completed_loans'] * 20;
             $score += $payor['ongoing_loans'] * 30;
-            $score -= $payor['overdue_loans'] * 50;
+            $score -= $payor['overdue_loans'] * 40;
 
             $payor['performance_score'] = round($score, 2);
         }
@@ -312,12 +320,21 @@ class View_ui_cont extends CI_Controller
 
         // ========== LOAN STATISTICS WITH CLIENT FILTER ==========
         // Get loan status data for chart with client filter
+        $today = date('Y-m-d');
+
         $loan_status_data = $this->db
-            ->select('l.status, COUNT(*) as count, SUM(l.total_amt) as total')
+            ->select("
+        CASE 
+                WHEN l.complete_date IS NOT NULL THEN 'completed'
+                WHEN l.due_date < '$today' THEN 'overdue'
+                ELSE COALESCE(l.status, 'active')
+            END as status,
+            COUNT(*) as count, 
+            SUM(l.total_amt) as total
+        ")
             ->from('tbl_loan l')
             ->join('tbl_client c', 'l.cl_id = c.id')
-            // ->where('c.status !=', '1')
-            ->group_by('l.status')
+            ->group_by('status')
             ->get()
             ->result_array();
 
@@ -325,7 +342,6 @@ class View_ui_cont extends CI_Controller
         foreach ($loan_status_data as $row) {
             $data['loan_status_counts'][$row['status']] = $row['count'];
         }
-
         // ========== END LOAN STATISTICS ==========
 
         // Load views

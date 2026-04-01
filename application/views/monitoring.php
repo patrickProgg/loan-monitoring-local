@@ -56,26 +56,33 @@
         <div class="table-data">
             <div class="order pt-2" style="background-color:transparent">
                 <div class="row align-items-end mb-3">
-                    <div class="col-auto me-3">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addLoaner">
-                            <i class="fas fa-user-plus me-1"></i> Add New
-                        </button>
-                        <button class="btn btn-success" id="generate_daily">
-                            <i class="fas fa-download me-1"></i> Daily Report
-                        </button>
-                        <button class="btn btn-secondary" id="generate_weekly">
-                            <i class="fas fa-download me-1"></i> Weekly Report
-                        </button>
-                        <button class="btn btn-warning" id="generate_monthly">
-                            <i class="fas fa-download me-1"></i> Monthly Report
-                        </button>
-                        <button class="btn btn-info" id="bulk_payment">
-                            <i class="fas fa-credit-card me-1"></i> Bulk Payment
-                        </button>
+                    <div class="col-auto me-3 d-flex justify-content-between align-items-center w-100">
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addLoaner">
+                                <i class="fas fa-user-plus me-1"></i> Add New
+                            </button>
+                            <button class="btn btn-success" id="generate_daily">
+                                <i class="fas fa-download me-1"></i> Daily Report
+                            </button>
+                            <button class="btn btn-secondary" id="generate_weekly">
+                                <i class="fas fa-download me-1"></i> Weekly Report
+                            </button>
+                            <button class="btn btn-warning" id="generate_monthly">
+                                <i class="fas fa-download me-1"></i> Monthly Report
+                            </button>
+                            <button class="btn btn-info" id="bulk_payment">
+                                <i class="fas fa-credit-card me-1"></i> Bulk Payment
+                            </button>
 
-                        <input type="date"
-                            style="width: 140px; display: inline-block; height: 34px; background-color: white; color: #444242; border-radius: 6px; border:1px solid var(--bs-secondary)"
-                            class="form-control" id="selected_date" name="selected_date" value="<?= date('Y-m-d') ?>">
+                            <input type="date"
+                                style="width: 140px; display: inline-block; height: 34px; background-color: white; color: #444242; border-radius: 6px; border:1px solid var(--bs-secondary)"
+                                class="form-control" id="selected_date" name="selected_date"
+                                value="<?= date('Y-m-d') ?>">
+                        </div>
+
+                        <button class="btn btn-danger" id="variance_tracking">
+                            <i class="fas fa-balance-scale me-1"></i> Variance Tracking
+                        </button>
                     </div>
 
                     <!-- <div class="col-md-2">
@@ -615,42 +622,102 @@
             <!-- OVERDUE -->
             <div class="modal fade" id="overdueModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static"
                 data-bs-keyboard="false">
-                <div class="modal-dialog" style="margin-top:10px">
+                <div class="modal-dialog" style="max-width:600px; margin-top:10px">
                     <div class="modal-content">
                         <div class="modal-header bg-light border-bottom">
-                            <h5 class="modal-title">Overdue</h5>
+                            <h5 class="modal-title fw-bold">
+                                <i class="fas fa-exclamation-triangle me-2 text-danger"></i>
+                                Overdue Loan Processing
+                            </h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
 
-                        <div class="modal-body">
-                            <div class="row g-2">
-                                <div class="col-4">
-                                    <label>Capital Amt</label>
-                                    <input id="new_capital_amt" type="number" class="form-control" />
-                                    <input id="new_type" type="hidden" />
-                                </div>
-                                <div class="col-4">
-                                    <label>Interest (%)</label>
-                                    <input id="new_interest" type="number" class="form-control" value="15" />
-                                </div>
-                                <div class="col-4">
-                                    <label>Added Amt</label>
-                                    <input id="new_added_amt" type="number" class="form-control" />
-                                </div>
-                                <div class="col-6">
-                                    <label>Total Amt</label>
-                                    <input id="new_total_amt" type="number" class="form-control" />
-                                </div>
-                                <div class="col-6">
-                                    <label>New Start Date</label>
-                                    <input id="new_start_date" type="date" class="form-control" />
+                        <div class="modal-body pb-0">
+                            <div class="container p-0">
+                                <!-- Overdue Details Card -->
+                                <div class="card border-0 shadow-sm rounded-4">
+                                    <div class="card-header bg-white border-0">
+                                        <h6 class="fw-bold mb-0">
+                                            <i class="fas fa-calculator me-2 text-danger"></i>
+                                            Overdue Loan Details
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row g-3">
+                                            <!-- Capital Amount -->
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-bold text-muted small mb-2">
+                                                    <i class="fas fa-coins me-1"></i> CAPITAL AMOUNT
+                                                </label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text bg-light border-0 fw-bold">₱</span>
+                                                    <input id="new_capital_amt" type="number"
+                                                        class="form-control form-control-lg" placeholder="0.00" min="0"
+                                                        step="0.01" />
+                                                </div>
+                                            </div>
+
+                                            <!-- Interest Rate -->
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-bold text-muted small mb-2">
+                                                    <i class="fas fa-percent me-1"></i> INTEREST RATE
+                                                </label>
+                                                <div class="input-group">
+                                                    <input id="new_interest" type="number"
+                                                        class="form-control form-control-lg" value="15" min="0"
+                                                        step="0.1" />
+                                                    <span class="input-group-text bg-light border-0">%</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Added Amount -->
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-bold text-muted small mb-2">
+                                                    <i class="fas fa-plus-circle me-1"></i> ADDED AMOUNT
+                                                </label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text bg-light border-0 fw-bold">₱</span>
+                                                    <input id="new_added_amt" type="number"
+                                                        class="form-control form-control-lg" placeholder="0.00" min="0"
+                                                        step="0.01" />
+                                                </div>
+                                            </div>
+
+                                            <!-- Total Amount -->
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-bold text-muted small mb-2">
+                                                    <i class="fas fa-calculator me-1"></i> TOTAL AMOUNT
+                                                </label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text bg-light border-0 fw-bold">₱</span>
+                                                    <input id="new_total_amt" type="text"
+                                                        class="form-control form-control-lg fw-bold text-success"
+                                                        readonly style="background-color: #f8f9fa;" />
+                                                </div>
+                                                <small class="text-muted">Capital + Interest + Added Amount</small>
+                                            </div>
+
+                                            <!-- New Start Date -->
+                                            <div class="col-md-12">
+                                                <label class="form-label fw-bold text-muted small mb-2">
+                                                    <i class="fas fa-calendar-alt me-1"></i> NEW START DATE
+                                                </label>
+                                                <input id="new_start_date" type="date"
+                                                    class="form-control form-control-lg" />
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" id="modalContinueBtn">Continue</button>
-                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                        <div class="modal-footer border-0 pt-0">
+                            <button type="button" class="btn btn-danger" id="modalContinueBtn">
+                                <i class="fas fa-check-circle me-1"></i> Continue
+                            </button>
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-1"></i> Cancel
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -885,6 +952,146 @@
                 </div>
             </div>
             <!-- BULK PAYMENT -->
+
+            <!-- VARIANCE MODAL -->
+            <div class="modal fade" id="variance_modal" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog modal-lg" style="max-width: 600px; margin-top: 10px;">
+                    <div class="modal-content">
+                        <div class="modal-header bg-light border-bottom">
+                            <h5 class="modal-title fw-bold">
+                                <i class="fas fa-balance-scale me-2 text-danger"></i>
+                                Variance Tracking
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <div class="modal-body p-3">
+                            <!-- Add New Button -->
+                            <div class="mb-3 text-start">
+                                <button class="btn btn-primary" onclick="openAddVariance()">
+                                    <i class="fas fa-plus-circle me-1"></i> Add New
+                                </button>
+                            </div>
+
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table id="variance_table" class="table table-hover mb-0 pb-0" style="width:100%">
+                                        <thead class="table-secondary">
+                                            <tr>
+                                                <th>DATE</th>
+                                                <th>OVER</th>
+                                                <th>SHORT</th>
+                                                <th style="width:150px">ACTION</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                        <tfoot class="table-light">
+                                            <tr style="font-weight: bold;">
+                                                <td class="text-end"><strong>TOTAL:</strong></td>
+                                                <td id="total_over" class="text-danger">
+                                                    <strong>₱0.00</strong>
+                                                </td>
+                                                <td id="total_short" class="text-danger">
+                                                    <strong>₱0.00</strong>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Close Button -->
+                            <div class="row mt-3">
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                                        <i class="fas fa-times me-1"></i> Close
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- VIEW VARIANCE MODAL -->
+
+            <!-- ADD VARIANCE MODAL -->
+            <div class="modal fade" id="addVarianceModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static"
+                data-bs-keyboard="false">
+                <div class="modal-dialog" style="max-width:600px; margin-top:10px">
+                    <div class="modal-content">
+                        <div class="modal-header bg-light border-bottom">
+                            <h5 class="modal-title fw-bold">
+                                <i class="fas fa-hand-holding-usd me-2 text-danger"></i>
+                                New Variance Data
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <div class="modal-body pb-0">
+                            <div class="container p-0">
+                                <!-- Loan Details Card -->
+                                <div class="card border-0 shadow-sm rounded-4">
+                                    <div class="card-header bg-white border-0">
+                                        <h6 class="fw-bold mb-0">
+                                            <i class="fas fa-calculator me-2 text-danger"></i>
+                                            Variance Details
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row g-3">
+                                            <!-- Capital Amount -->
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-bold text-muted small mb-2">
+                                                    <i class="fas fa-coins me-1"></i> OVER
+                                                </label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text bg-light border-0 fw-bold">₱</span>
+                                                    <input id="variance_over" type="number"
+                                                        class="form-control form-control-lg" placeholder="0.00" min="0"
+                                                        step="0.01" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-bold text-muted small mb-2">
+                                                    <i class="fas fa-coins me-1"></i> SHORT
+                                                </label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text bg-light border-0 fw-bold">₱</span>
+                                                    <input id="variance_short" type="number"
+                                                        class="form-control form-control-lg" placeholder="0.00" min="0"
+                                                        step="0.01" />
+                                                </div>
+                                            </div>
+
+                                            <!-- Start Date -->
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-bold text-muted small mb-2">
+                                                    <i class="fas fa-calendar-alt me-1"></i> DATE
+                                                </label>
+                                                <input id="variance_date" type="date"
+                                                    class="form-control form-control-lg" value="<?= date('Y-m-d') ?>" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer border-0 pt-0">
+                            <button type="button" class="btn btn-primary" id="addVariance">
+                                <i class="fas fa-check-circle me-1"></i> Add
+                            </button>
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-1"></i> Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADD VARIANCE MODAL -->
 
     </main>
 </section>
@@ -1749,6 +1956,14 @@
         address = $('#header_address').text();
 
         function sendAjax(values = {}) {
+
+            var capital_amt = $('#new_capital_amt').val() || $('#running_bal').val();
+
+            if (capital_amt === undefined || capital_amt === null) {
+                Swal.fire('Error', 'Please input capital amount.', 'error');
+                return;
+            }
+
             $.ajax({
                 url: "<?php echo base_url('Monitoring_cont/complete_payment'); ?>",
                 type: "POST",
@@ -1850,6 +2065,11 @@
             const start_date = $('#add_start_date').val();
             const fullname = $('#header_name').text();
             const address = $('#header_address').text();
+
+            if (capital_amt === '') {
+                Swal.fire('Error', 'Please input capital amount.', 'error');
+                return;
+            }
 
             $.ajax({
                 url: "<?php echo base_url('Monitoring_cont/add_new_loan_same_client'); ?>",
@@ -3021,7 +3241,6 @@
         });
     });
 
-
     function formatSmartDate(dateString, previousDate = null) {
         const date = new Date(dateString);
 
@@ -3069,9 +3288,395 @@
         });
     }
 
+    $(document).on('click', '#variance_tracking', function () {
+        $('#variance_modal').modal('show');
+    });
+
+    var variance_table = $("#variance_table").DataTable({
+        columnDefs: [{ targets: '_all', orderable: true }],
+        lengthMenu: [10, 25, 50, 100],
+        processing: true,
+        serverSide: true,
+        searching: true,
+        ordering: true,
+        autoWidth: false,
+        ajax: {
+            url: '<?php echo site_url('Monitoring_cont/get_variance_data'); ?>',
+            type: 'POST',
+            data: function (d) {
+                d.start = d.start || 0;
+                d.length = d.length || 10;
+            },
+            dataType: 'json',
+            error: function (xhr, status, error) {
+                console.error("AJAX request failed: " + error);
+            },
+            dataSrc: function (response) {
+                function formatPeso(num) {
+                    if (!num && num !== 0) return '—';
+                    return '₱ ' + parseFloat(num).toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+                }
+
+                $('#total_over').text(formatPeso(response.total_over));
+                $('#total_short').text(formatPeso(response.total_short));
+
+                return response.data;
+            },
+        },
+        columns: [
+            { data: 'date_added', class: 'text-center' },
+            {
+                data: 'over',
+                class: 'text-center',
+                render: function (data, type, row) {
+                    if (type === 'display') {
+                        if (!data && data !== 0) return '—';
+                        return '₱ ' + parseFloat(data).toLocaleString('en-US', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        });
+                    }
+                    return data;
+                }
+            },
+            {
+                data: 'short',
+                class: 'text-center',
+                render: function (data, type, row) {
+                    if (type === 'display') {
+                        if (!data && data !== 0) return '—';
+                        return '₱ ' + parseFloat(data).toLocaleString('en-US', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        });
+                    }
+                    return data;
+                }
+            },
+            {
+                data: 'id',
+                orderable: false,
+                className: 'text-center',
+                render: function (data, type, row) {
+                    return `
+                        <button class="btn btn-sm btn-success edit-btn" data-id="${data}" data-date="${row.date_added}" data-over="${row.over}" data-short="${row.short}">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn btn-sm btn-danger delete-btn" data-id="${data}">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                `;
+                }
+            }
+        ]
+    });
+
+    function openAddVariance() {
+        $('#addVarianceModal').modal('show');
+
+        // Remove previous event handler to avoid duplicate submissions
+        $('#addVariance').off('click').on('click', function () {
+            const over = $('#variance_over').val();
+            const short = $('#variance_short').val();
+            const date = $('#variance_date').val();
+
+            // Validation
+            if (!over && !short) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Validation Error',
+                    text: 'Please enter either Over or Short amount',
+                    confirmButtonColor: '#3085d6'
+                });
+                return;
+            }
+
+            if (!date) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Validation Error',
+                    text: 'Please select a date',
+                    confirmButtonColor: '#3085d6'
+                });
+                return;
+            }
+
+            // Confirmation dialog
+            Swal.fire({
+                title: 'Confirm Addition',
+                text: `Are you sure you want to add this variance record?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, add it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Show loading state
+                    Swal.fire({
+                        title: 'Processing...',
+                        text: 'Please wait',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    $.ajax({
+                        url: "<?php echo base_url('Monitoring_cont/add_variance'); ?>",
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            over: over,
+                            short: short,
+                            date: date,
+                        },
+                        success: function (res) {
+                            if (res.status === 'success') {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success!',
+                                    text: res.message,
+                                    showConfirmButton: false,
+                                    timer: 500,
+                                    timerProgressBar: true,
+                                });
+                                variance_table.ajax.reload();
+                                $('#addVarianceModal').modal('hide');
+                                resetVarianceForm();
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: res.message || 'Failed to add variance record',
+                                    confirmButtonColor: '#3085d6'
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'An error occurred while processing your request',
+                                confirmButtonColor: '#3085d6'
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    }
+
+    $('#variance_table').on('click', '.edit-btn', function () {
+        const $btn = $(this);
+        const $row = $btn.closest('tr');
+        const id = $btn.data('id');
+        const originalDate = $btn.data('date');
+        const originalOver = $btn.data('over');
+        const originalShort = $btn.data('short');
+
+        // Get the cells to edit (date, over, short columns)
+        const $dateCell = $row.find('td:eq(0)');
+        const $overCell = $row.find('td:eq(1)');
+        const $shortCell = $row.find('td:eq(2)');
+        const $actionCell = $row.find('td:eq(3)');
+
+        // Store original values
+        $row.data('original-date', originalDate);
+        $row.data('original-over', originalOver);
+        $row.data('original-short', originalShort);
+        $row.data('id', id);
+
+        // Replace text with input fields
+        $dateCell.html(`<input type="date" class="form-control form-control-sm edit-date" value="${originalDate}">`);
+        $overCell.html(`<input type="number" class="form-control form-control-sm edit-over" value="${originalOver}" step="0.01" min="0">`);
+        $shortCell.html(`<input type="number" class="form-control form-control-sm edit-short" value="${originalShort}" step="0.01" min="0">`);
+
+        // Replace buttons with Save and Cancel
+        $actionCell.html(`
+            <div>
+                <button class="btn btn-sm btn-primary save-btn" data-id="${id}">
+                    <i class="fas fa-save"></i> Save
+                </button>
+                <button class="btn btn-sm btn-secondary cancel-btn">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        `);
+
+        $('.edit-over').on('input', function () {
+            if ($(this).val() > 0 && $(this).val() !== '') {
+                $('.edit-short').val(0);
+            }
+        });
+
+        $('.edit-short').on('input', function () {
+            if ($(this).val() > 0 && $(this).val() !== '') {
+                $('.edit-over').val(0);
+            }
+        });
+    });
+
+    $('#variance_table').on('click', '.save-btn', function () {
+        const $btn = $(this);
+        const $row = $btn.closest('tr');
+        const id = $btn.data('id');
+        const date = $row.find('.edit-date').val();
+        const over = $row.find('.edit-over').val() || 0;
+        const short = $row.find('.edit-short').val() || 0;
+
+        if (!date) {
+            Swal.fire('Error', 'Please select a date', 'error');
+            return;
+        }
+
+        if (over == 0 && short == 0) {
+            Swal.fire('Error', 'Please enter either Over or Short amount', 'error');
+            return;
+        }
+
+        if (over > 0 && short > 0) {
+            Swal.fire('Error', 'Please enter only one value (either Over OR Short, not both)', 'error');
+            return;
+        }
+
+        Swal.fire({
+            title: 'Updating...',
+            text: 'Please wait',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        $.ajax({
+            url: '<?php echo base_url('Monitoring_cont/update_variance'); ?>',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id: id,
+                date: date,
+                over: over,
+                short: short
+            },
+            success: function (res) {
+                if (res.status === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: res.message,
+                        showConfirmButton: false,
+                        timer: 500
+                    });
+                    variance_table.ajax.reload();
+                } else {
+                    Swal.fire('Error!', res.message, 'error');
+                }
+            },
+            error: function () {
+                Swal.fire('Error!', 'Failed to update variance record', 'error');
+            }
+        });
+    });
+
+    // Cancel button click - restore original values
+    $('#variance_table').on('click', '.cancel-btn', function () {
+        const $btn = $(this);
+        const $row = $btn.closest('tr');
+        const id = $row.data('id');
+        const originalDate = $row.data('original-date');
+        const originalOver = $row.data('original-over');
+        const originalShort = $row.data('original-short');
+
+        // Restore original values
+        $row.find('td:eq(0)').html(originalDate);
+        $row.find('td:eq(1)').html(originalOver ? '₱ ' + parseFloat(originalOver).toLocaleString('en-US', { minimumFractionDigits: 2 }) : '—');
+        $row.find('td:eq(2)').html(originalShort ? '₱ ' + parseFloat(originalShort).toLocaleString('en-US', { minimumFractionDigits: 2 }) : '—');
+
+        // Restore original buttons
+        $row.find('td:eq(3)').html(`
+            <div>
+                <button class="btn btn-sm btn-success edit-btn" data-id="${id}" data-date="${originalDate}" data-over="${originalOver}" data-short="${originalShort}">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+                <button class="btn btn-sm btn-danger delete-btn" data-id="${id}">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </div>
+        `);
+    });
+
+    // Delete button click with confirmation
+    $('#variance_table').on('click', '.delete-btn', function () {
+        const $btn = $(this);
+        const id = $btn.data('id');
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This action cannot be undone!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Deleting...',
+                    text: 'Please wait',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                $.ajax({
+                    url: '<?php echo base_url('Monitoring_cont/delete_variance'); ?>',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: { id: id },
+                    success: function (res) {
+                        if (res.status === 'success') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Deleted!',
+                                text: res.message,
+                                showConfirmButton: false,
+                                timer: 500
+                            });
+                            variance_table.ajax.reload();
+                        } else {
+                            Swal.fire('Error!', res.message, 'error');
+                        }
+                    },
+                    error: function () {
+                        Swal.fire('Error!', 'Failed to delete variance record', 'error');
+                    }
+                });
+            }
+        });
+    });
+
+    function resetVarianceForm() {
+        $('#variance_over').val("");
+        $('#variance_short').val("");
+        $('#variance_date').val('<?= date('Y-m-d') ?>');
+    }
+
+    $('#addVarianceModal').on('hidden.bs.modal', function () {
+        resetVarianceForm();
+    });
+
     const viewLoanerEl = document.getElementById('viewLoaner');
     const overdueModalEl = document.getElementById('overdueModal');
     const addNewModalEl = document.getElementById('addLoanSameClient');
+    const varianceModal = document.getElementById('variance_modal');
+    const addVariance = document.getElementById('addVarianceModal');
 
     viewLoanerEl.addEventListener('hidden.bs.modal', () => {
         $('#dateDropdownBtn').prop('disabled', false);
@@ -3101,6 +3706,15 @@
     addNewModalEl.addEventListener('hidden.bs.modal', () => {
         viewLoanerEl.classList.remove('modal-dimmed');
     });
+
+    addVariance.addEventListener('show.bs.modal', () => {
+        varianceModal.classList.add('modal-dimmed');
+    });
+
+    addVariance.addEventListener('hidden.bs.modal', () => {
+        varianceModal.classList.remove('modal-dimmed');
+    });
+
 
     // let clickAttempts = 0;
 

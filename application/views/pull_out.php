@@ -52,7 +52,7 @@
         border-color: #f5576c;
         color: white;
     }
-</style>
+</style>    
 <section id="content">
     <main>
         <div class="table-data">

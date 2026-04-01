@@ -88,6 +88,7 @@ class Monitoring_cont extends CI_Controller
             $this->db->or_like('a.contact_no_1', $searchValue);
             $this->db->or_like('a.contact_no_2', $searchValue);
             $this->db->or_like('a.date_added', $searchValue);
+            $this->db->or_like('a.acc_no', $searchValue);
             $this->db->group_end();
         }
 
@@ -989,6 +990,7 @@ class Monitoring_cont extends CI_Controller
         $sheet->getColumnDimension('D')->setWidth(15);
 
         $loanData = $this->get_monthly_data($selectedDate);
+        $loanDataPayment = $this->get_monthly_data_payments($selectedDate);
         $expensesData = $this->get_monthly_expenses($selectedDate);
 
         $formattedDate = date('F Y', strtotime($selectedDate));
@@ -1012,7 +1014,7 @@ class Monitoring_cont extends CI_Controller
 
         $excelRow = 3;
 
-        $sheet->setCellValue('A' . $excelRow, (float) $loanData['total_payment']);
+        $sheet->setCellValue('A' . $excelRow, (float) $loanDataPayment['total_payment']);
         $sheet->getStyle('A' . $excelRow)->getAlignment()
             ->setHorizontal(Alignment::HORIZONTAL_CENTER);
         $sheet->getStyle('A' . $excelRow)
@@ -1460,24 +1462,34 @@ class Monitoring_cont extends CI_Controller
         $this->db->select('
             SUM(a.capital_amt) as total_capital_amt,
             SUM(a.added_amt) as total_added_amt,
-            SUM(a.total_amt) as total_amt,
-            SUM(IFNULL(p.total_payment,0)) as total_payment
+            SUM(a.total_amt) as total_amt
         ');
 
         $this->db->from('tbl_loan as a');
-
-        $this->db->join("
-        (
-                SELECT loan_id, SUM(amt) as total_payment
-                FROM tbl_payment
-                GROUP BY loan_id
-            ) as p
-        ", "p.loan_id = a.id", "left");
-
-        $this->db->join('tbl_client as c', 'c.id = a.cl_id');
+        $this->db->join('tbl_client as b', 'b.id = a.cl_id');
 
         $this->db->where('a.start_date >=', $startMonth);
         $this->db->where('a.start_date <=', $endMonth);
+        $this->db->where('b.status !=', '1');
+
+        return $this->db->get()->row_array();
+    }
+
+    private function get_monthly_data_payments($selectedDate)
+    {
+        $startMonth = date('Y-m-01', strtotime($selectedDate));
+        $endMonth = date('Y-m-t', strtotime($selectedDate));
+
+        $this->db->select('
+            SUM(IFNULL(b.amt,0)) as total_payment
+        ');
+
+        $this->db->from('tbl_loan as a');
+        $this->db->join('tbl_payment as b', 'b.loan_id = a.id');
+        $this->db->join('tbl_client as c', 'c.id = a.cl_id');
+
+        $this->db->where('b.payment_for >=', $startMonth);
+        $this->db->where('b.payment_for <=', $endMonth);
         $this->db->where('c.status !=', '1');
 
         return $this->db->get()->row_array();
@@ -1605,7 +1617,7 @@ class Monitoring_cont extends CI_Controller
             b.full_name,
             b.acc_no
         ');
-        
+
         $this->db->from('tbl_loan as a');
         $this->db->join('tbl_client as b', 'b.id = a.cl_id');
         $this->db->where("'$datePlusOne' BETWEEN a.start_date AND a.due_date");
@@ -1824,5 +1836,145 @@ class Monitoring_cont extends CI_Controller
         );
 
         echo json_encode($response);
+    }
+
+    public function add_variance()
+    {
+        $over = $this->input->post('over');
+        $short = $this->input->post('short');
+        $date = $this->input->post('date');
+
+        $varianceData = [
+            'over' => $over,
+            'short' => $short,
+            'date_added' => $date
+        ];
+
+        $inserted = $this->db->insert('tbl_variance', $varianceData);
+
+        if ($inserted) {
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Variance inserted successfully.'
+            ]);
+        } else {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Failed to insert variance.'
+            ]);
+        }
+    }
+
+    public function get_variance_data()
+    {
+        $start = $this->input->post('start');
+        $length = $this->input->post('length');
+        $searchValue = trim($this->input->post('search')['value']);
+
+        $order = $this->input->post('order');
+        $orderColumnIndex = isset($order[0]['column']) ? $order[0]['column'] : 0;
+        $orderDir = isset($order[0]['dir']) ? $order[0]['dir'] : 'DESC';
+
+        $columns = [
+            0 => 'date_added',
+            1 => 'over',
+            2 => 'short'
+        ];
+
+        $orderColumn = $columns[$orderColumnIndex];
+
+        // Base query for totals - escape reserved keyword 'over'
+        $totalQuery = clone $this->db;
+        $totalQuery->select('
+        SUM(`over`) as total_over,
+        SUM(short) as total_short
+    ');
+        $totalQuery->from('tbl_variance');
+
+        if (!empty($searchValue)) {
+            $totalQuery->group_start();
+            $totalQuery->like('date_added', $searchValue);
+            $totalQuery->or_like('`over`', $searchValue);  // Escape 'over' here too
+            $totalQuery->or_like('short', $searchValue);
+            $totalQuery->group_end();
+        }
+
+        $totals = $totalQuery->get()->row();
+        $totalOver = $totals->total_over ?: 0;
+        $totalShort = $totals->total_short ?: 0;
+
+        // Main query for paginated data - escape 'over' in select and like
+        $this->db->select('
+            id,
+            date_added,
+            `over`,
+            short
+        ');
+
+        $this->db->from('tbl_variance');
+
+        if (!empty($searchValue)) {
+            $this->db->group_start();
+            $this->db->like('date_added', $searchValue);
+            $this->db->or_like('`over`', $searchValue);  // Escape 'over' here
+            $this->db->or_like('short', $searchValue);
+            $this->db->group_end();
+        }
+
+        $this->db->order_by($orderColumn, $orderDir);
+
+        $subQuery = clone $this->db;
+        $recordsFiltered = $subQuery->get()->num_rows();
+
+        $this->db->limit($length, $start);
+
+        $query = $this->db->get();
+        $data = $query->result_array();
+
+        echo json_encode([
+            "draw" => intval($this->input->post('draw')),
+            "recordsTotal" => $recordsFiltered,
+            "recordsFiltered" => $recordsFiltered,
+            "data" => $data,
+            "total_over" => $totalOver,
+            "total_short" => $totalShort
+        ]);
+    }
+
+    public function update_variance()
+    {
+        $id = $this->input->post('id');
+        $date = $this->input->post('date');
+        $over = $this->input->post('over');
+        $short = $this->input->post('short');
+
+        $data = [
+            'date_added' => $date,
+            'over' => $over,
+            'short' => $short
+        ];
+
+        $this->db->where('id', $id);
+        $result = $this->db->update('tbl_variance', $data);
+
+        if ($result) {
+            echo json_encode(['status' => 'success', 'message' => 'Variance record updated successfully']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Failed to update variance record']);
+        }
+    }
+
+    public function delete_variance()
+    {
+        $id = $this->input->post('id');
+
+        $this->db->where('id', $id);
+        $result = $this->db->delete('tbl_variance');
+
+        if ($result) {
+            echo json_encode(['status' => 'success', 'message' => 'Variance record deleted successfully']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Failed to delete variance record']);
+        }
     }
 }
