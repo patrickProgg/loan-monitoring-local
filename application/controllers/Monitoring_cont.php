@@ -1977,4 +1977,17 @@ class Monitoring_cont extends CI_Controller
             echo json_encode(['status' => 'error', 'message' => 'Failed to delete variance record']);
         }
     }
+    public function delete_loan_id()
+    {
+        $id = $this->input->post('id');
+
+        $this->db->where('id', $id);
+        $result = $this->db->delete('tbl_loan');
+
+        if ($result) {
+            echo json_encode(['status' => 'success', 'message' => 'Loan record deleted successfully']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Failed to delete loan record']);
+        }
+    }
 }

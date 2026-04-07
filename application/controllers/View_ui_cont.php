@@ -31,22 +31,21 @@ class View_ui_cont extends CI_Controller
             ->where('status !=', '1')
             ->count_all_results('tbl_client');
 
-        $this->db->select_sum('
-            CASE 
-                WHEN tbl_loan.status = "overdue" THEN COALESCE(p.payment_total, 0)
-                ELSE tbl_loan.total_amt
-            END',
-            'total_amt'
-        );
+        // $this->db->select_sum('
+        //     CASE 
+        //         WHEN tbl_loan.status = "overdue" THEN COALESCE(p.payment_total, 0)
+        //         ELSE tbl_loan.total_amt
+        //     END',
+        //     'total_amt'
+        // );
 
         // Subquery to sum payments per loan
-        $subquery = '(SELECT loan_id, SUM(amt) AS payment_total FROM tbl_payment GROUP BY loan_id) AS p';
+        // $subquery = '(SELECT loan_id, SUM(amt) AS payment_total FROM tbl_payment GROUP BY loan_id) AS p';
 
         $data['total_loan_amt'] = $this->db
+            ->select_sum('tbl_loan.total_amt')
             ->from('tbl_loan')
             ->join('tbl_client', 'tbl_loan.cl_id = tbl_client.id')
-            ->join($subquery, 'p.loan_id = tbl_loan.id', 'left')
-            // ->where('tbl_client.status !=', '1')
             ->get()
             ->row()
             ->total_amt ?: 0;

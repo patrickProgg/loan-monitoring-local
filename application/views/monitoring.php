@@ -453,8 +453,15 @@
 
                                         <div
                                             class="d-flex justify-content-between align-items-center mb-2 mt-2 pt-2 border-top">
-                                            <h5 class="text-dark fw-bold mb-0"><i
-                                                    class="fas fa-history me-2 text-primary"></i>Loan History</h5>
+                                            <div class="d-flex align-items-center gap-2 mb-0">
+                                                <h5 class="text-dark fw-bold mb-0">
+                                                    <i class="fas fa-history me-2 text-primary"></i>Loan History
+                                                </h5>
+                                                <button class="btn btn-sm btn-danger d-inline-block ms-2"
+                                                    id="deleteLoanDetails">
+                                                    <i class="fas fa-trash me-1"></i> Delete
+                                                </button>
+                                            </div>
                                             <div class="d-flex align-items-center gap-2">
                                                 <!-- Date Filter Dropdown -->
                                                 <div class="dropdown" style="width: 167px;">
@@ -1884,15 +1891,29 @@
         let statusText = "";
         let statusClass = "";
 
+        const capital_amt = parseFloat($('#header_capital_amt').text());
+
         if (status === 'completed') {
             statusText = "COMPLETED";
             statusClass = "text-success";
+            if (capital_amt === 0) {
+                $('#deleteLoanDetails').removeClass('d-none');
+            }
+            else {
+                $('#deleteLoanDetails').addClass('d-none');
+            }
         } else if (status === 'ongoing') {
             statusText = "ONGOING";
             statusClass = "text-primary";
+            if (totalPayment > 0) {
+                $('#deleteLoanDetails').addClass('d-none');
+            } else {
+                $('#deleteLoanDetails').removeClass('d-none');
+            }
         } else if (status === 'overdue') {
             statusText = "OVERDUE";
             statusClass = "text-danger";
+            $('#deleteLoanDetails').addClass('d-none');
         }
 
         // if (firstStatus && status != 'completed') {
@@ -1957,11 +1978,15 @@
 
         function sendAjax(values = {}) {
 
-            var capital_amt = $('#new_capital_amt').val() || $('#running_bal').val();
+            if (action === "overdue") {
+                var capital_amt = $('#new_capital_amt').val() || $('#running_bal').val();
+                console.log(capital_amt);
 
-            if (capital_amt === undefined || capital_amt === null) {
-                Swal.fire('Error', 'Please input capital amount.', 'error');
-                return;
+                if (capital_amt === undefined || capital_amt === null) {
+                    Swal.fire('Error', 'Please input capital amount.', 'error');
+                    return;
+                }
+
             }
 
             $.ajax({
@@ -2127,6 +2152,62 @@
         }
     }
 
+    $('#deleteLoanDetails').on('click', function () {
+        const loan_id = $('#header_loan_id').val();
+        const id = $('#header_id').val();
+        const acc_no = $('#header_acc_no').text();
+        const full_name = $('#header_name').text();
+        const address = $('#header_address').text();
+
+        console.log(id);
+
+        swal.fire({
+            title: 'Are you sure?',
+            text: "This action cannot be undone!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Deleting...',
+                    text: 'Please wait',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                $.ajax({
+                    url: '<?php echo base_url('Monitoring_cont/delete_loan_id'); ?>',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: { id: loan_id },
+                    success: function (res) {
+                        if (res.status === 'success') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Deleted!',
+                                text: res.message,
+                                showConfirmButton: false,
+                                timer: 500
+                            });
+                            $('#header_date_arr').val($('#header_date_arr option:first').val()).trigger('change');
+                            openViewModal(id, full_name, address, acc_no);
+                        } else {
+                            Swal.fire('Error!', res.message, 'error');
+                        }
+                    },
+                    error: function () {
+                        Swal.fire('Error!', 'Failed to delete variance record', 'error');
+                    }
+                });
+            }
+        });
+    });
 
     $('#editLoanDetails').off('click').on('click', function () {
         const btn = $(this);
