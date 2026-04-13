@@ -99,10 +99,11 @@
                             <th style="width:100px; text-align:center">ACC NO</th>
                             <th>FULL NAME</th>
                             <th>ADDRESS</th>
-                            <th style="width:220px">CONTACT NO</th>
+                            <th style="width:110px">CONTACT NO</th>
                             <th style="width:30px">COUNT</th>
                             <th style="width:100px">TOTAL LOAN</th>
-                            <th style="width:110px">DATE ADDED</th>
+                            <th style="width:110px">CLIENT SINCE</th>
+                            <th style="width:110px">LATEST DUE DATE</th>
                             <th style="width:150px; text-align:center">ACTION</th>
                         </tr>
                     </thead>
@@ -1199,6 +1200,7 @@
                 }
             },
             { data: 'date_added', class: 'text-center' },
+            { data: 'latest_due_date', class: 'text-center' },
             {
                 data: 'id',
                 orderable: false,

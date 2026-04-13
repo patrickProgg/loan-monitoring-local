@@ -38,7 +38,8 @@ class Monitoring_cont extends CI_Controller
             3 => 'contact_no',
             4 => 'loan_count',
             5 => 'total_loan_amount',
-            6 => 'a.date_added'
+            6 => 'a.date_added',    
+            7 => 'latest_due_date'
         ];
 
         $orderColumn = $columns[$orderColumnIndex];
@@ -60,7 +61,8 @@ class Monitoring_cont extends CI_Controller
                     WHEN b.status = "overdue" THEN COALESCE(p.payment_total, 0)
                     ELSE b.capital_amt
                 END
-            ), 0) AS total_loan_amount
+            ), 0) AS total_loan_amount,
+            MAX(b.due_date) AS latest_due_date
         ');
 
         $this->db->from('tbl_client as a');
