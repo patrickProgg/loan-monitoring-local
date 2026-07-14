@@ -162,20 +162,15 @@
 
 <?php extract($data ?? [], EXTR_SKIP); ?>
 
-<!-- 
-<div class="bg-blue-500 text-white p-4 rounded-lg mt-3">
-    Tailwind is working!
-</div> -->
-
 <div class="row px-3 pt-3" style="padding-top:10px">
     <ul class="box-info">
 
         <a href="<?= base_url(); ?>client" style="text-decoration: none; color: inherit;">
-            <li style="border-bottom: 2px solid rgba(255, 99, 132, 1);">
-                <i class='bx bx-group' style="background: rgba(255, 99, 132, 0.2); color: rgba(255, 99, 132, 1);"></i>
+            <li style="border-bottom: 2px solid rgba(54, 162, 235, 1);">
+                <!-- <i class='bx bx-group' style="background: rgba(255, 99, 132, 0.2); color: rgba(255, 99, 132, 1);"></i> -->
                 <span class="text">
                     <h3><?php echo $total_client; ?></h3>
-                    <p style="color:rgba(255, 99, 132, 1)">Active Clients</p>
+                    <p>Active Clients</p>
                 </span>
             </li>
         </a>
@@ -183,51 +178,94 @@
         <!-- background: linear-gradient(135deg, var(--light-blue), #ffffff); -->
 
         <!-- <a href="<?= base_url(); ?>masterfile" style="text-decoration: none; color: inherit;"> -->
-        <!-- <li style="border-bottom: 2px solid rgba(255, 159, 64, 1);">
+        <!-- <li style="border-bottom: 2px solid rgb(235, 103, 206);">
             <i class='bx bx-dollar-circle'
                 style="background: rgba(255, 159, 64, 0.2); color: rgba(255, 159, 64, 1);"></i>
             <span class="text">
-                <h3>₱<?= number_format($total_loan_amt, 2) ?></h3>
-                <p style="color:rgba(255, 159, 64, 1)">Total Collectibles</p>
+                <h3>₱<?= number_format($total_capital_loan_amt, 2) ?></h3>
+                <p style="color:rgba(255, 159, 64, 1)">Total Released</p>
             </span>
         </li> -->
-        <li style="border-bottom: 2px solid rgba(255, 159, 64, 1);">
-            <i class='bx bx-dollar-circle'
-                style="background: rgba(255, 159, 64, 0.2); color: rgba(255, 159, 64, 1);"></i>
+        <li style="border-bottom: 2px solid rgba(54, 162, 235, 1);">
+            <!-- <i class='bx bx-dollar-circle' style="background: rgba(255, 159, 64, 0.2); color: rgba(255, 159, 64, 1);"></i> -->
             <span class="text">
-                <h3>₱<?= number_format($total_loan_amt - $total_capital_loan_amt, 2) ?></h3>
-                <p style="color:rgba(255, 159, 64, 1)">Total Profit</p>
+                <h3>₱ <?= number_format($total_loan_amt - $total_capital_loan_amt, 2) ?></h3>
+                <p>Total Profit</p>
             </span>
         </li>
         <!-- </a> -->
 
         <!-- <a href="<?= base_url(); ?>location" style="text-decoration: none; color: inherit;"> -->
-        <li style="border-bottom: 2px solid rgba(75, 192, 192, 1);">
-            <i class='bx bx-wallet-alt' style="background: rgba(75, 192, 192, 0.2); color: rgba(75, 192, 192, 1);"></i>
+        <li style="border-bottom: 2px solid rgba(54, 162, 235, 1);">
+            <!-- <i class='bx bx-wallet-alt' style="background: rgba(75, 192, 192, 0.2); color: rgba(75, 192, 192, 1);"></i> -->
             <span class="text">
-                <h3>₱<?= number_format($total_loan_amt - $total_loan_payment, 2) ?></h3>
-                <p style="color:rgba(75, 192, 192, 1)">Total Receivables</p>
+                <h3>₱ <?= number_format($total_receivables, 2) ?></h3>
+                <p>Total Receivables</p>
             </span>
         </li>
         <!-- </a> -->
 
+        <li style="border-bottom: 2px solid rgba(54, 162, 235, 1);">
+            <!-- <i class='bx bx-coins' style="background: rgba(255, 184, 102, 0.2); color: rgba(255, 184, 102, 1);"></i> -->
+            <span class="text">
+                <h3>₱ <?= number_format($total_payment, 2) ?>
+                </h3>
+                <p>Total Collectibles</p>
+            </span>
+        </li>
+
+        <li style="border-bottom: 2px solid rgba(54, 162, 235, 1);">
+            <!-- <i class='bx bx-coins' style="background: rgba(255, 184, 102, 0.2); color: rgba(255, 184, 102, 1);"></i> -->
+            <span class="text">
+                <h3>₱ <?= number_format($total_capital, 2) ?>
+                </h3>
+                <p>Total Capital</p>
+            </span>
+        </li>
+
+        <li style="border-bottom: 2px solid rgb(54, 162, 235, 1);">
+            <!-- <i class='bx bx-coins' style="background: rgba(255, 184, 102, 0.2); color: rgba(255, 184, 102, 1);"></i> -->
+            <span class="text">
+                <h3>₱ <?= number_format($total_amt, 2) ?>
+                </h3>
+                <p>Total Amount</p>
+            </span>
+        </li>
+
+        <li style="border-bottom: 2px solid rgb(54, 162, 235, 1);">
+            <!-- <i class='bx bx-coins' style="background: rgba(255, 184, 102, 0.2); color: rgba(255, 184, 102, 1);"></i> -->
+            <span class="text">
+                <h3>₱ <?= number_format($total_interest, 2) ?>
+                </h3>
+                <p>Total Interest</p>
+            </span>
+        </li>
+
+        <li style="border-bottom: 2px solid rgb(54, 162, 235, 1);">
+            <!-- <i class='bx bx-coins' style="background: rgba(255, 184, 102, 0.2); color: rgba(255, 184, 102, 1);"></i> -->
+            <span class="text">
+                <h3>₱ <?= number_format($total_added, 2) ?>
+                </h3>
+                <p>Total Added</p>
+            </span>
+        </li>
+
         <a href="<?= base_url(); ?>pull_out" style="text-decoration: none; color: inherit;">
-            <li style="border-bottom: 2px solid rgba(153, 102, 255, 1);">
-                <i class='bx bx-log-out'
-                    style="background: rgba(153, 102, 255, 0.2); color: rgba(153, 102, 255, 1);"></i>
+            <li style="border-bottom: 2px solid rgba(54, 162, 235, 1);">
+                <!-- <i class='bx bx-log-out' style="background: rgba(153, 102, 255, 0.2); color: rgba(153, 102, 255, 1);"></i> -->
                 <span class="text">
-                    <h3>₱<?= number_format($total_pull_out, 2) ?></h3>
-                    <p style="color:rgba(153, 102, 255, 1)">Available Pull Out</p>
+                    <h3>₱ <?= number_format($total_pull_out, 2) ?></h3>
+                    <p>Total Pull Out</p>
                 </span>
             </li>
         </a>
 
         <a href="<?= base_url(); ?>expenses" style="text-decoration: none; color: inherit;">
             <li style="border-bottom: 2px solid rgba(54, 162, 235, 1); ">
-                <i class='bx bxs-flame' style="background: rgba(54, 162, 235, 0.2); color: rgba(54, 162, 235, 1);"></i>
+                <!-- <i class='bx bxs-flame' style="background: rgba(54, 162, 235, 0.2); color: rgba(54, 162, 235, 1);"></i> -->
                 <span class="text">
-                    <h3>₱<?= number_format($total_expenses, 2) ?></h3>
-                    <p style="color:rgba(54, 162, 235, 1)">Total Expenses</p>
+                    <h3>₱ <?= number_format($total_expenses, 2) ?></h3>
+                    <p>Total Expenses</p>
                 </span>
             </li>
         </a>
@@ -246,51 +284,21 @@
                             <input type="date"
                                 style="width: 150px; display: inline-block; height: 28px; background-color: white; color: #444242; border-radius: 6px; border:1px solid var(--bs-info)"
                                 class="form-control" id="selected_date" name="selected_date"
-                                value="<?php echo $selected_date; ?>"
-                                onchange="document.getElementById('dateForm').submit()">
+                                value="<?php echo $selected_date; ?>">
                         </form>
                     </h3>
                 </div>
             </div>
             <div class="card-body">
-
                 <div class="card bg-light">
                     <div class="card-body text-center">
-                        <?php
-                        $display_start = date('M j, Y', strtotime($start_date));
-                        $display_end = date('M j, Y', strtotime($end_date));
-                        $is_single_day = ($range_type == 'day');
-                        ?>
-
-                        <h4 class="text-muted mb-3">
-                            <?php if ($is_single_day): ?>
-                                Payments for <span class="text-primary"><?php echo $display_start; ?></span>
-                            <?php else: ?>
-                                Payments from
-                                <span class="text-primary"><?php echo $display_start; ?></span>
-                                to
-                                <span class="text-primary"><?php echo $display_end; ?></span>
-                            <?php endif; ?>
+                        <h4 class="text-muted mb-3" id="dateRangeText">
                         </h4>
 
-                        <div class="display-4 font-weight-bold text-success mb-3">
-                            ₱<?php echo number_format($range_total, 2); ?>
+                        <div class="display-4 font-weight-bold text-success mb-3" id="rangeTotalDisplay">
                         </div>
 
-                        <div class="text-muted">
-                            <i class="fas fa-calendar-alt"></i>
-                            <?php
-                            if ($is_single_day) {
-                                echo 'Single day';
-                            } else {
-                                $days = (strtotime($end_date) - strtotime($start_date)) / (60 * 60 * 24) + 1;
-                                echo $days . ' day' . ($days > 1 ? 's' : '');
-                            }
-                            ?>
-
-                            <?php if ($range_type == 'day' && $selected_date == date('Y-m-d')): ?>
-                                <span class="badge badge-success ml-2 text-muted">Today</span>
-                            <?php endif; ?>
+                        <div class="text-muted" id="rangeInfoDisplay">
                         </div>
                     </div>
                 </div>
@@ -298,20 +306,19 @@
                 <div class="mt-3 text-center">
                     <small class="text-muted">
                         Quick select:
-                        <a href="?selected_date=<?php echo date('Y-m-d'); ?>&range_type=day"
-                            class="btn btn-sm btn-outline-secondary">
+                        <a href="#" data-range="day" data-date="<?php echo date('Y-m-d'); ?>"
+                            class="btn btn-sm btn-outline-secondary quick-select">
                             Today
                         </a>
-                        <a href="?selected_date=<?php echo $selected_date; ?>&range_type=week"
-                            class="btn btn-sm btn-outline-secondary">
+                        <a href="#" data-range="week" data-date="<?php echo $selected_date; ?>"
+                            class="btn btn-sm btn-outline-secondary quick-select">
                             Week
                         </a>
-                        <a href="?selected_date=<?php echo $selected_date; ?>&range_type=month"
-                            class="btn btn-sm btn-outline-secondary">
+                        <a href="#" data-range="month" data-date="<?php echo $selected_date; ?>"
+                            class="btn btn-sm btn-outline-secondary quick-select">
                             Month
                         </a>
                     </small>
-
                 </div>
             </div>
         </div>
@@ -404,6 +411,29 @@
                 </div>
             </div>
 
+            <!-- <div class="col-md-12 d-flex mt-3">
+                <div class="card border-left-warning shadow h-100 w-100">
+                    <div class="card-body py-2 d-flex flex-column justify-content-between">
+                        <div class="row no-gutters align-items-center flex-grow-1">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                    Overdue Loans
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <?php echo $loan_status_counts['overdue'] ?? 0; ?>
+                                </div>
+                                <div class="mt-2">
+                                    <span class="badge badge-danger text-danger">Attention Needed</span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-exclamation-triangle fa-2x text-danger"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
             <div class="col-md-12 d-flex mt-3">
                 <div class="card border-left-warning shadow h-100 w-100">
                     <div class="card-body py-2 d-flex flex-column justify-content-between">
@@ -417,6 +447,30 @@
                                 </div>
                                 <div class="mt-2">
                                     <span class="badge badge-danger text-danger">Attention Needed</span>
+                                    <!-- Button to show names -->
+                                    <button type="button" class="btn btn-sm btn-outline-danger ml-2"
+                                        onclick="showOverdueClients()">
+                                        <i class="fas fa-users"></i> View
+                                    </button>
+                                </div>
+                                <!-- Hidden list of overdue clients -->
+                                <div id="overdueList" style="display: none; margin-top: 10px;">
+                                    <?php if (!empty($overdue_clients)): ?>
+                                        <?php
+                                        $names = array_column($overdue_clients, 'full_name');
+                                        $unique_names = array_unique($names);
+                                        ?>
+                                        <ul class="list-group">
+                                            <?php foreach ($unique_names as $name): ?>
+                                                <li class="list-group-item list-group-item-danger py-1">
+                                                    <i class="fas fa-user text-danger"></i>
+                                                    <?php echo $name; ?>
+                                                </li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    <?php else: ?>
+                                        <p class="text-success">✅ No overdue clients</p>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                             <div class="col-auto">
@@ -650,6 +704,15 @@
 
 <script>
 
+    function showOverdueClients() {
+        var list = document.getElementById('overdueList');
+        if (list.style.display === 'none' || list.style.display === '') {
+            list.style.display = 'block';
+        } else {
+            list.style.display = 'none';
+        }
+    }
+
     $(document).ready(function () {
         const ctx = document.getElementById('paymentChart').getContext('2d');
         const monthlyData = <?php echo json_encode($monthly_payments); ?>;
@@ -862,6 +925,8 @@
         }
 
         function updateYearSummary(data, year, yearTotal = null) {
+
+            console.log(data); // Debugging line to check the data received
             const total = yearTotal || data.reduce((a, b) => a + b, 0);
             const avgMonthly = total / 12;
             const maxMonthValue = Math.max(...data);
@@ -1368,9 +1433,6 @@
                         //         }
                         //     }
                         // },
-                        legend: {
-                            display: false // This hides the entire legend
-                        },
                         // title: {
                         //     display: true,
                         //     text: 'Top Good Payors - Performance Score Ranking',
@@ -1383,6 +1445,9 @@
                         //         bottom: 30
                         //     }
                         // },
+                        legend: {
+                            display: false // This hides the entire legend
+                        },
                         tooltip: {
                             callbacks: {
                                 title: function (context) {
@@ -1413,14 +1478,14 @@
                     scales: {
                         x: {
                             beginAtZero: true,
-                            // title: {
-                            //     display: true,
-                            //     text: 'Performance Score',
-                            //     font: {
-                            //         size: 13,
-                            //         weight: 'bold'
-                            //     }
-                            // },
+                            title: {
+                                display: true,
+                                text: 'Performance Score',
+                                font: {
+                                    size: 13,
+                                    weight: 'bold'
+                                }
+                            },
                             grid: {
                                 color: 'rgba(0, 0, 0, 0.1)'
                             }

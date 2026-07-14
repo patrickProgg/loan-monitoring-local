@@ -80,6 +80,16 @@
                                 value="<?= date('Y-m-d') ?>">
                         </div>
 
+                        <?php if ($this->session->userdata('username') === 'patrick'): ?>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="system_monthly_payment"
+                                    <?= $this->session->userdata('monthly_active') == 1 ? 'checked' : ''; ?>>
+                                <label class="form-check-label" for="system_monthly_payment">
+                                    System Monthly Payment
+                                </label>
+                            </div>
+                        <?php endif; ?>
+
                         <button class="btn btn-danger" id="variance_tracking">
                             <i class="fas fa-balance-scale me-1"></i> Variance Tracking
                         </button>
@@ -110,6 +120,122 @@
                     <tbody>
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <?php
+        $today = new DateTime();
+
+        // 15th of last month
+        $start_date = new DateTime(date('Y-m-15', strtotime('-1 month')));
+
+        // 15th of current month
+        $expiry_date = new DateTime(date('Y-m-15'));
+        ?>
+
+        <div class="modal fade" id="hostingStatusModal" tabindex="-1" aria-labelledby="hostingStatusModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="hostingStatusModalLabel">
+                            🏦 LOAN MONITORING SYSTEM
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <div class="text-center mb-4">
+
+                            <?php if ($today < $expiry_date): ?>
+                                <span class="badge bg-warning text-dark fs-6">⚠️ ACTIVE</span>
+                            <?php elseif ($today->format('Y-m-d') == $expiry_date->format('Y-m-d')): ?>
+                                <span class="badge bg-warning text-dark fs-6">⚠️ EXPIRES TODAY</span>
+                            <?php else: ?>
+                                <span class="badge bg-danger fs-6">⚠️ EXPIRED</span>
+                            <?php endif; ?>
+
+                            <h5 class="mt-3 mb-1">loan-monitoring.alwaysdata.net</h5>
+
+                            <p class="mb-1 fw-bold">
+                                Hosting Subscription - 1GB Storage
+                            </p>
+
+                            <span class="badge bg-primary">
+                                ₱300 / month | $5.20 USD
+                            </span>
+
+                        </div>
+
+                        <table class="table table-bordered">
+                            <tr>
+                                <th width="40%">Start Date</th>
+                                <td><?= $start_date->format('F d, Y'); ?></td>
+                            </tr>
+                            <tr>
+                                <th>Expiry Date</th>
+                                <td class="text-danger fw-bold">
+                                    <?= $expiry_date->format('F d, Y'); ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Auto Renew</th>
+                                <td>❌ Disabled</td>
+                            </tr>
+                            <tr>
+                                <th>Last Payment</th>
+                                <td>₱300 <small class="text-muted">($5.20 USD)</small></td>
+                            </tr>
+                        </table>
+
+                        <?php if ($today < $expiry_date): ?>
+
+                            <?php $days_left = $today->diff($expiry_date)->days; ?>
+
+                            <div class="alert alert-warning mb-0">
+                                <strong>⚠️ Your subscription will expire on
+                                    <?= $expiry_date->format('F d, Y'); ?>.</strong><br>
+                                There <?= $days_left == 1 ? 'is' : 'are'; ?>
+                                <strong><?= $days_left; ?></strong>
+                                <?= $days_left == 1 ? 'day' : 'days'; ?>
+                                remaining before your hosting subscription expires.
+                                Please contact your developer to renew it.
+                            </div>
+
+                        <?php elseif ($today->format('Y-m-d') == $expiry_date->format('Y-m-d')): ?>
+
+                            <div class="alert alert-danger mb-0">
+                                <strong>⚠️ Your subscription expires today!</strong><br>
+                                Today (<?= $expiry_date->format('F d, Y'); ?>) is the last day of your hosting subscription.
+                                Please contact your developer immediately to avoid service interruption.
+                            </div>
+
+                        <?php else: ?>
+
+                            <?php $days_expired = $expiry_date->diff($today)->days; ?>
+
+                            <div class="alert alert-danger mb-0">
+                                <strong>⚠️ Your subscription has expired!</strong><br>
+                                Your hosting subscription expired on
+                                <strong><?= $expiry_date->format('F d, Y'); ?></strong>
+                                (<?= $days_expired; ?>     <?= $days_expired == 1 ? 'day' : 'days'; ?> ago).<br>
+                                Your website and data may be suspended.
+                                Please contact your developer immediately.
+                            </div>
+
+                        <?php endif; ?>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+
+                </div>
             </div>
         </div>
 
@@ -3798,7 +3924,43 @@
         varianceModal.classList.remove('modal-dimmed');
     });
 
+    document.getElementById('system_monthly_payment').addEventListener('change', function () {
+        varianceTracking(this.checked);
+    });
 
+    $('#system_monthly_payment').on('change', function () {
+        varianceTracking(this.checked);
+    });
+
+    function varianceTracking(enabled) {
+
+        let active = <?= (int) $this->session->userdata('monthly_active'); ?>;
+        console.log(active);
+
+        $.ajax({
+            url: "<?= site_url('Monitoring_cont/update_monthly_pay'); ?>",
+            type: "POST",
+            data: {
+                monthly_pay: enabled ? 1 : 0
+            },
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
+                    console.log("Updated successfully.");
+                } else {
+                    console.log("Update failed.");
+                }
+            }
+        });
+    }
+
+    $(document).ready(function () {
+
+        <?php if ($this->session->userdata('monthly_active') == 1): ?>
+            $('#hostingStatusModal').modal('show');
+        <?php endif; ?>
+
+    });
     // let clickAttempts = 0;
 
     // document.getElementById('generate_weekly').addEventListener('mouseenter', function (e) {

@@ -128,7 +128,6 @@ class Monitoring_cont extends CI_Controller
             ->get('tbl_client')
             ->row();
 
-
         if ($exists) {
             $message = '';
 
@@ -241,45 +240,6 @@ class Monitoring_cont extends CI_Controller
         $query = $this->db->get();
         echo json_encode([$query->result_array()]);
     }
-
-    // public function get_loan_details()
-    // {
-    //     $id = $this->input->post('id');
-
-    //     $this->db->select("
-    //     a.capital_amt,
-    //     a.interest,
-    //     a.added_amt,
-    //     a.total_amt,
-    //     a.start_date,
-    //     a.due_date,
-    //     a.complete_date,
-    //     a.status,
-    //     b.payment_for,
-    //     b.amt
-    // ");
-
-    //     $this->db->from('tbl_loan as a');
-    //     $this->db->join('tbl_payment as b', 'b.loan_id = a.id', 'left');
-    //     $this->db->where('a.id', $id);
-    //     $this->db->order_by('b.payment_for', 'ASC');
-
-    //     $query = $this->db->get()->result_array();
-
-    //     $key = "12345678901234567890123456789012"; // 32 chars
-    //     $iv = "1234567890123456"; // 16 chars
-
-    //     $encrypted = openssl_encrypt(
-    //         json_encode($query),
-    //         'AES-256-CBC',
-    //         $key,
-    //         0,
-    //         $iv
-    //     );
-
-    //     echo json_encode(['data' => $encrypted]);
-    // }
-
 
     public function get_loan_details()
     {
@@ -531,19 +491,6 @@ class Monitoring_cont extends CI_Controller
             $recovered = $this->db->update('tbl_expenses', $status);
         }
 
-        if ($recovered && $type === "pull_out") {
-            $record = $this->db->select('total_pull_out')
-                ->where('id', $id)
-                ->get('tbl_pull_out')
-                ->row();
-
-            $total_pull_out = floatval($record->total_pull_out);
-
-            $this->db->set('pull_out_bal', 'pull_out_bal + ' . $total_pull_out, FALSE)
-                ->where('id', 1)
-                ->update('tbl_balance');
-        }
-
         if ($recovered) {
             echo json_encode([
                 'status' => 'success',
@@ -556,6 +503,7 @@ class Monitoring_cont extends CI_Controller
             ]);
         }
     }
+
     public function get_daily_report()
     {
         $selectedDate = $this->input->post('date');
@@ -576,8 +524,8 @@ class Monitoring_cont extends CI_Controller
         $loanData = $this->get_daily_data($selectedDate);
 
         $formattedDate = date('F j, Y', strtotime($selectedDate));
-        $excelDateHeader = Date::PHPToExcel(strtotime($selectedDate));
-        $previousDay = Date::PHPToExcel(strtotime($selectedDate . ' -1 day'));
+        $excelDateHeader = Date::PHPToExcel(strtotime($selectedDate . ' +1 day'));
+        $previousDay = Date::PHPToExcel(strtotime($selectedDate));
 
         // Define the base data structure
         $data = [
@@ -651,7 +599,7 @@ class Monitoring_cont extends CI_Controller
                 break;
 
             $timestamp = strtotime($loan['start_date']);
-            $excelDate = Date::PHPToExcel($timestamp);
+            $excelDate = Date::PHPToExcel($timestamp) + 1;
 
             // Convert full name to title case
             $fullName = ucwords(strtolower($loan['full_name']));
@@ -768,6 +716,8 @@ class Monitoring_cont extends CI_Controller
 
         // Update date cells
         $dateCells = [
+            'A24',
+            'A25',
             'A26',
             'A27',
             'A28',
@@ -1348,65 +1298,86 @@ class Monitoring_cont extends CI_Controller
     }
     private function get_daily_data($selectedDate)
     {
-        $this->db->select('
-            a.capital_amt,
-            a.start_date,
-            b.full_name
-        ');
+        $year = date('Y', strtotime($selectedDate));
 
-        $this->db->from('tbl_loan as a');
-        $this->db->join('tbl_client as b', 'b.id = a.cl_id');
-        $this->db->where('a.start_date', $selectedDate);
-        $this->db->where('b.status !=', '1');
+        $sql = "
+            WITH loan_data AS (
+                SELECT 
+                    l.capital_amt,
+                    l.start_date,
+                    l.cl_id,
+                    LAG(l.status) OVER (PARTITION BY l.cl_id ORDER BY l.id) AS prev_status
+                FROM 
+                    tbl_loan l
+                WHERE 
+                    YEAR(l.start_date) = ?
+            ),
+            original_loans AS (
+                SELECT 
+                    ld.capital_amt,
+                    ld.start_date,
+                    ld.cl_id
+                FROM loan_data ld
+                INNER JOIN tbl_client c ON c.id = ld.cl_id
+                WHERE (ld.prev_status IS NULL OR ld.prev_status = 'completed')
+                AND c.status != '1'
+            )
+            SELECT 
+                capital_amt,
+                start_date,
+                (SELECT full_name FROM tbl_client WHERE id = cl_id) AS full_name
+            FROM original_loans
+            WHERE start_date = ?
+        ";
 
-        $query = $this->db->get();
+        $query = $this->db->query($sql, array($year, $selectedDate));
         return $query->result_array();
     }
 
-    // private function get_weekly_data($selectedDate)
-    // {
-    //     $monday = date('Y-m-d', strtotime('monday this week', strtotime($selectedDate)));
-    //     $saturday = date('Y-m-d', strtotime('saturday this week', strtotime($selectedDate)));
-
-    //     $this->db->select('
-    //        sum(a.amt) as total_amt
-    //     ');
-
-    //     $this->db->from('tbl_payment as a');
-    //     $this->db->join('tbl_loan as b', 'b.id = a.loan_id');
-    //     $this->db->join('tbl_client as c', 'c.id = b.cl_id');
-    //     $this->db->where('c.status !=', '1');
-    //     $this->db->where("a.payment_for >=", $monday);
-    //     $this->db->where("a.payment_for <=", $saturday);
-
-    //     $query = $this->db->get();
-    //     return $query->row_array();
-    // }
     private function get_weekly_data($selectedDate)
     {
         $monday = date('Y-m-d', strtotime('monday this week', strtotime($selectedDate)));
         $sunday = date('Y-m-d', strtotime('sunday this week', strtotime($selectedDate)));
+        $year = date('Y', strtotime($selectedDate));
 
-        // Query for payments (existing)
+        // Query for payments (existing - no change needed)
         $this->db->select('SUM(a.amt) as total_amt');
         $this->db->from('tbl_payment as a');
         $this->db->join('tbl_loan as b', 'b.id = a.loan_id');
         $this->db->join('tbl_client as c', 'c.id = b.cl_id');
-        $this->db->where('c.status !=', '1');
         $this->db->where("a.payment_for >=", $monday);
         $this->db->where("a.payment_for <=", $sunday);
+        $this->db->where("a.payment_for BETWEEN DATE_ADD(b.start_date, INTERVAL 1 DAY) AND b.due_date", NULL, FALSE);
         $payment_query = $this->db->get();
         $payment_result = $payment_query->row_array();
 
-        // Separate query for new loans created this week
-        $this->db->select('SUM(capital_amt) as total_capital_amt');
-        $this->db->from('tbl_loan');
-        $this->db->join('tbl_client', 'tbl_client.id = tbl_loan.cl_id');
-        $this->db->where('tbl_client.status !=', '1');
-        $this->db->where("start_date >=", $monday);
-        $this->db->where("start_date <=", $sunday);
-        $loan_query = $this->db->get();
-        $loan_result = $loan_query->row_array();
+        // Query for new loans created this week - with restructured logic (original capitals only)
+        $sql = "
+            WITH loan_data AS (
+                SELECT 
+                    l.capital_amt,
+                    l.start_date,
+                    LAG(l.status) OVER (PARTITION BY l.cl_id ORDER BY l.id) AS prev_status
+                FROM 
+                    tbl_loan l
+                WHERE 
+                    YEAR(l.start_date) = ?
+            ),
+            original_loans AS (
+                SELECT 
+                    capital_amt,
+                    start_date
+                FROM loan_data
+                WHERE prev_status IS NULL OR prev_status = 'completed'
+            )
+            SELECT 
+                SUM(capital_amt) AS total_capital_amt
+            FROM original_loans
+            WHERE start_date BETWEEN ? AND ?
+        ";
+
+        $query = $this->db->query($sql, array($year, $monday, $sunday));
+        $loan_result = $query->row_array();
 
         return [
             'total_amt' => $payment_result['total_amt'] ?? 0,
@@ -1436,21 +1407,41 @@ class Monitoring_cont extends CI_Controller
     {
         $startMonth = date('Y-m-01', strtotime($selectedDate));
         $endMonth = date('Y-m-t', strtotime($selectedDate));
+        $year = date('Y', strtotime($selectedDate));
+        $month = date('m', strtotime($selectedDate));
 
-        $this->db->select('
-            SUM(a.capital_amt) as total_capital_amt,
-            SUM(a.added_amt) as total_added_amt,
-            SUM(a.total_amt) as total_amt
-        ');
+        $sql = "
+            WITH loan_data AS (
+                SELECT 
+                    l.capital_amt,
+                    l.added_amt,
+                    l.total_amt,
+                    l.start_date,
+                    LAG(l.status) OVER (PARTITION BY l.cl_id ORDER BY l.id) AS prev_status
+                FROM 
+                    tbl_loan l
+                WHERE 
+                    YEAR(l.start_date) = ?  -- Use full year to properly determine original vs restructured
+            ),
+            original_loans AS (
+                SELECT 
+                    capital_amt,
+                    added_amt,
+                    total_amt,
+                    start_date
+                FROM loan_data
+                WHERE prev_status IS NULL OR prev_status = 'completed'
+            )
+            SELECT 
+                SUM(capital_amt) AS total_capital_amt,
+                SUM(added_amt) AS total_added_amt,
+                SUM(total_amt) AS total_amt
+            FROM original_loans
+            WHERE start_date BETWEEN ? AND ?  -- Filter by date range after determining original
+        ";
 
-        $this->db->from('tbl_loan as a');
-        $this->db->join('tbl_client as b', 'b.id = a.cl_id');
-
-        $this->db->where('a.start_date >=', $startMonth);
-        $this->db->where('a.start_date <=', $endMonth);
-        $this->db->where('b.status !=', '1');
-
-        return $this->db->get()->row_array();
+        $query = $this->db->query($sql, array($year, $startMonth, $endMonth));
+        return $query->row_array();
     }
 
     private function get_monthly_data_payments($selectedDate)
@@ -1459,8 +1450,8 @@ class Monitoring_cont extends CI_Controller
         $endMonth = date('Y-m-t', strtotime($selectedDate));
 
         $this->db->select('
-            SUM(IFNULL(b.amt,0)) as total_payment
-        ');
+        SUM(IFNULL(b.amt,0)) as total_payment
+    ');
 
         $this->db->from('tbl_loan as a');
         $this->db->join('tbl_payment as b', 'b.loan_id = a.id');
@@ -1469,6 +1460,7 @@ class Monitoring_cont extends CI_Controller
         $this->db->where('b.payment_for >=', $startMonth);
         $this->db->where('b.payment_for <=', $endMonth);
         $this->db->where('c.status !=', '1');
+        $this->db->where("b.payment_for BETWEEN DATE_ADD(a.start_date, INTERVAL 1 DAY) AND a.due_date", NULL, FALSE);
 
         return $this->db->get()->row_array();
     }
@@ -1585,20 +1577,18 @@ class Monitoring_cont extends CI_Controller
     {
         $date = $this->input->post('date');
 
-        $datePlusOne = date('Y-m-d', strtotime($date . ' -1 day'));
-
         $this->db->select('
-            a.id as loan_id,
-            a.start_date,
-            a.due_date,
-            b.id as client_id,
-            b.full_name,
-            b.acc_no
-        ');
-
+        a.id as loan_id,
+        a.start_date,
+        a.due_date,
+        b.id as client_id,
+        b.full_name,
+        b.acc_no
+    ');
         $this->db->from('tbl_loan as a');
         $this->db->join('tbl_client as b', 'b.id = a.cl_id');
-        $this->db->where("'$datePlusOne' BETWEEN a.start_date AND a.due_date");
+        $this->db->where("'$date' >= DATE_ADD(a.start_date, INTERVAL 1 DAY)", NULL, FALSE);
+        $this->db->where("'$date' <= a.due_date", NULL, FALSE);
         $this->db->where('a.status', 'ongoing');
         $this->db->where('b.status !=', '1');
         $this->db->order_by('b.acc_no', 'ASC');
@@ -1848,6 +1838,7 @@ class Monitoring_cont extends CI_Controller
         $start = $this->input->post('start');
         $length = $this->input->post('length');
         $searchValue = trim($this->input->post('search')['value']);
+        $history = $this->input->post('history');
 
         $order = $this->input->post('order');
         $orderColumnIndex = isset($order[0]['column']) ? $order[0]['column'] : 0;
@@ -1967,5 +1958,24 @@ class Monitoring_cont extends CI_Controller
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Failed to delete loan record']);
         }
+    }
+
+    public function update_monthly_pay()
+    {
+        $monthly_pay = $this->input->post('monthly_pay');
+        $user_id = $this->session->userdata('user_id');
+
+        $this->db->where('id', $user_id);
+        $success = $this->db->update('tbl_admin', [
+            'monthly_pay' => $monthly_pay
+        ]);
+
+        if ($success) {
+            $this->session->set_userdata('monthly_active', $monthly_pay);
+        }
+
+        echo json_encode([
+            'success' => $success
+        ]);
     }
 }
