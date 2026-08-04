@@ -2210,6 +2210,7 @@
         calculateNewTotal();
 
         $('#addLoanBtn').off('click').on('click', function () {
+            const $btn = $(this);
             const cl_id = $('#header_id').val();
             const capital_amt = $('#add_capital_amt').val();
             const interest = $('#add_interest').val();
@@ -2218,11 +2219,14 @@
             const start_date = $('#add_start_date').val();
             const fullname = $('#header_name').text();
             const address = $('#header_address').text();
+            const acc_no = $('#header_acc_no').text();
 
             if (capital_amt === '') {
                 Swal.fire('Error', 'Please input capital amount.', 'error');
                 return;
             }
+
+            $btn.prop('disabled', true).text('Processing...');
 
             $.ajax({
                 url: "<?php echo base_url('Monitoring_cont/add_new_loan_same_client'); ?>",
@@ -2247,10 +2251,13 @@
                             timerProgressBar: true,
 
                         });
+                        client_table.ajax.reload();
                         $('#addNewLoan').show();
-                        openViewModal(cl_id, fullname, address)
+                        openViewModal(cl_id, fullname, address, acc_no);
                         $('#addLoanSameClient').modal('hide');
                     }
+
+                    $btn.prop('disabled', false).text('Add Loan');
                 }
             });
 
