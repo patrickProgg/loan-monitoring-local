@@ -164,7 +164,7 @@
                             </p>
 
                             <span class="badge bg-primary">
-                                ₱300 / month | $5.20 USD
+                                ₱600 / month | $10 USD
                             </span>
 
                         </div>
@@ -186,7 +186,7 @@
                             </tr>
                             <tr>
                                 <th>Last Payment</th>
-                                <td>₱300 <small class="text-muted">($5.20 USD)</small></td>
+                                <td>₱600 <small class="text-muted">($10 USD)</small></td>
                             </tr>
                         </table>
 

@@ -52,7 +52,76 @@
         border-color: #f5576c;
         color: white;
     }
-</style>    
+
+    /* Soft background colors for badges */
+    .bg-warning-soft {
+        background-color: #fff3cd !important;
+        color: #856404 !important;
+    }
+
+    .bg-info-soft {
+        background-color: #d1ecf1 !important;
+        color: #0c5460 !important;
+    }
+
+    .bg-success-soft {
+        background-color: #d4edda !important;
+        color: #155724 !important;
+    }
+
+    .bg-primary-soft {
+        background-color: #cce5ff !important;
+        color: #004085 !important;
+    }
+
+    .bg-secondary-soft {
+        background-color: #e2e3e5 !important;
+        color: #383d41 !important;
+    }
+
+    /* Badge styling */
+    .badge {
+        font-weight: 500;
+        font-size: 0.75rem;
+        padding: 0.4rem 0.8rem;
+    }
+
+    /* Action buttons */
+    .btn-group-sm .btn {
+        padding: 0.2rem 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    .btn-group-sm .btn i {
+        font-size: 0.7rem;
+    }
+
+    /* Table hover effect */
+    .table-hover tbody tr:hover {
+        background-color: rgba(13, 110, 253, 0.05);
+        transition: background-color 0.2s;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .modal-dialog {
+            margin: 0.5rem;
+        }
+
+        .table-responsive {
+            font-size: 0.8rem;
+        }
+
+        .btn-group-sm .btn {
+            padding: 0.1rem 0.3rem;
+            font-size: 0.65rem;
+        }
+
+        .btn-group-sm .btn i {
+            font-size: 0.6rem;
+        }
+    }
+</style>
 <section id="content">
     <main>
         <div class="table-data">
@@ -285,28 +354,152 @@
                         <div class="container">
                             <!-- Pullout Balance Card -->
                             <div class="mb-4">
-                                <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-                                    <div class="row g-0">
-                                        <div class="col-auto">
-                                            <div class="bg-gradient-danger h-100 px-4 d-flex align-items-center">
-                                                <i class="fas fa-hand-holding-usd fs-1 text-white"></i>
+                                <div class="row g-3">
+                                    <!-- Pullout Balance -->
+                                    <div class="col-md-6 col-xl-4">
+                                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                                            <div class="row g-0">
+                                                <div class="col">
+                                                    <div class="card-body p-3">
+                                                        <label
+                                                            class="text-muted small text-uppercase fw-bold d-block mb-1">
+                                                            <i class="fas fa-circle me-2 text-danger"
+                                                                style="font-size: 8px;"></i>
+                                                            Pullout Balance
+                                                        </label>
+                                                        <div class="d-flex align-items-end">
+                                                            <span class="text-muted me-1">₱</span>
+                                                            <input type="text"
+                                                                class="form-control border-0 p-0 fs-4 fw-bold text-dark"
+                                                                id="total_pullout" value="0.00" readonly
+                                                                style="background: transparent; height: auto; width: auto;">
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col">
-                                            <div class="card-body p-4">
-                                                <div class="d-flex align-items-center justify-content-between mb-2">
-                                                    <label class="text-muted small text-uppercase fw-bold">
-                                                        <i class="fas fa-circle me-2 text-danger"
-                                                            style="font-size: 8px;"></i>
-                                                        Available Pullout Balance
-                                                    </label>
+                                    </div>
+
+                                    <!-- Processing Fee -->
+                                    <div class="col-md-6 col-xl-4">
+                                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                                            <div class="row g-0">
+                                                <div class="col">
+                                                    <div class="card-body p-3">
+                                                        <label
+                                                            class="text-muted small text-uppercase fw-bold d-block mb-1">
+                                                            <i class="fas fa-circle me-2 text-warning"
+                                                                style="font-size: 8px;"></i>
+                                                            Processing Fee
+                                                        </label>
+                                                        <div class="d-flex align-items-end">
+                                                            <span class="text-muted me-1">₱</span>
+                                                            <input type="text"
+                                                                class="form-control border-0 p-0 fs-4 fw-bold text-dark"
+                                                                id="processing_fee_balance" value="0.00" readonly
+                                                                style="background: transparent; height: auto; width: auto;">
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="d-flex align-items-end">
-                                                    <span class="text-muted me-2 fs-4 mb-1">₱</span>
-                                                    <input type="text"
-                                                        class="form-control border-0 p-0 fs-1 fw-bold text-dark"
-                                                        id="total_pullout" value="0.00" readonly
-                                                        style="background: transparent; height: auto;">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Ticket -->
+                                    <div class="col-md-6 col-xl-4">
+                                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                                            <div class="row g-0">
+                                                <div class="col">
+                                                    <div class="card-body p-3">
+                                                        <label
+                                                            class="text-muted small text-uppercase fw-bold d-block mb-1">
+                                                            <i class="fas fa-circle me-2 text-info"
+                                                                style="font-size: 8px;"></i>
+                                                            Ticket
+                                                        </label>
+                                                        <div class="d-flex align-items-end">
+                                                            <span class="text-muted me-1">₱</span>
+                                                            <input type="text"
+                                                                class="form-control border-0 p-0 fs-4 fw-bold text-dark"
+                                                                id="ticket_balance" value="0.00" readonly
+                                                                style="background: transparent; height: auto; width: auto;">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Profit -->
+                                    <div class="col-md-6 col-xl-4">
+                                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                                            <div class="row g-0">
+                                                <div class="col">
+                                                    <div class="card-body p-3">
+                                                        <label
+                                                            class="text-muted small text-uppercase fw-bold d-block mb-1">
+                                                            <i class="fas fa-circle me-2 text-success"
+                                                                style="font-size: 8px;"></i>
+                                                            Profit
+                                                        </label>
+                                                        <div class="d-flex align-items-end">
+                                                            <span class="text-muted me-1">₱</span>
+                                                            <input type="text"
+                                                                class="form-control border-0 p-0 fs-4 fw-bold text-dark"
+                                                                id="profit_balance" value="0.00" readonly
+                                                                style="background: transparent; height: auto; width: auto;">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Expansion -->
+                                    <div class="col-md-6 col-xl-4">
+                                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                                            <div class="row g-0">
+                                                <div class="col">
+                                                    <div class="card-body p-3">
+                                                        <label
+                                                            class="text-muted small text-uppercase fw-bold d-block mb-1">
+                                                            <i class="fas fa-circle me-2 text-primary"
+                                                                style="font-size: 8px;"></i>
+                                                            Expansion
+                                                        </label>
+                                                        <div class="d-flex align-items-end">
+                                                            <span class="text-muted me-1">₱</span>
+                                                            <input type="text"
+                                                                class="form-control border-0 p-0 fs-4 fw-bold text-dark"
+                                                                id="expansion_balance" value="0.00" readonly
+                                                                style="background: transparent; height: auto; width: auto;">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Capital -->
+                                    <div class="col-md-6 col-xl-4">
+                                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                                            <div class="row g-0">
+                                                <div class="col">
+                                                    <div class="card-body p-3">
+                                                        <label
+                                                            class="text-muted small text-uppercase fw-bold d-block mb-1">
+                                                            <i class="fas fa-circle me-2 text-secondary"
+                                                                style="font-size: 8px;"></i>
+                                                            Capital
+                                                        </label>
+                                                        <div class="d-flex align-items-end">
+                                                            <span class="text-muted me-1">₱</span>
+                                                            <input type="text"
+                                                                class="form-control border-0 p-0 fs-4 fw-bold text-dark"
+                                                                id="capital_balance" value="0.00" readonly
+                                                                style="background: transparent; height: auto; width: auto;">
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -330,9 +523,6 @@
                                                 <i class="fas fa-coins me-1"></i> AMOUNT TO WITHDRAW
                                             </label>
                                             <div class="input-group">
-                                                <!-- <span class="input-group-text bg-light border-0">
-                                                    <i class="fas fa-peso-sign"></i>
-                                                </span> -->
                                                 <input type="number" class="form-control form-control-lg"
                                                     id="withdraw_amount" name="withdraw_amount" placeholder="0.00"
                                                     min="0" step="0.01" value="">
@@ -359,8 +549,58 @@
                                             <i class="fas fa-pen me-1"></i> NOTES / REASON
                                         </label>
                                         <textarea class="form-control" id="withdrawal_notes" name="withdrawal_notes"
-                                            rows="2"
+                                            rows="1"
                                             placeholder="Enter withdrawal reason or notes (optional)"></textarea>
+                                    </div>
+
+                                    <!-- Fee/Category Checkboxes -->
+                                    <!-- Fee/Category Radio Buttons (only 1 can be selected) -->
+                                    <div class="mb-4">
+                                        <label class="form-label fw-bold text-muted small mb-2">
+                                            <i class="fas fa-tags me-1"></i> WITHDRAWAL CATEGORY
+                                        </label>
+                                        <div class="d-flex gap-3 flex-wrap">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" id="fee_processing"
+                                                    name="withdrawal_category" value="processing_fee"
+                                                    data-label="Processing Fee">
+                                                <label class="form-check-label" for="fee_processing">
+                                                    <i class="fas fa-receipt text-danger me-1"></i> Processing Fee
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" id="fee_ticket"
+                                                    name="withdrawal_category" value="ticket" data-label="Ticket">
+                                                <label class="form-check-label" for="fee_ticket">
+                                                    <i class="fas fa-ticket-alt text-warning me-1"></i> Ticket
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" id="fee_profit"
+                                                    name="withdrawal_category" value="profit" data-label="Profit">
+                                                <label class="form-check-label" for="fee_profit">
+                                                    <i class="fas fa-chart-line text-success me-1"></i> Profit
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" id="fee_expansion"
+                                                    name="withdrawal_category" value="expansion" data-label="Expansion">
+                                                <label class="form-check-label" for="fee_expansion">
+                                                    <i class="fas fa-expand-arrows-alt text-info me-1"></i> Expansion
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" id="fee_capital"
+                                                    name="withdrawal_category" value="capital" data-label="Capital">
+                                                <label class="form-check-label" for="fee_capital">
+                                                    <i class="fas fa-building text-primary me-1"></i> Capital
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <small class="text-muted mt-1 d-block">
+                                            <i class="fas fa-info-circle me-1"></i>
+                                            Select one category for this withdrawal
+                                        </small>
                                     </div>
 
                                     <!-- Quick Amount Selector -->
@@ -407,7 +647,7 @@
 
         <!-- Withdraw History Modal -->
         <div class="modal fade" id="withdrawHistoryModal" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-lg" style="max-width:800px; margin-top: 10px;">
+            <div class="modal-dialog modal-xl" style="max-width:1000px; margin-top: 10px;">
                 <div class="modal-content">
                     <div class="modal-header bg-light border-bottom">
                         <h5 class="modal-title fw-bold">
@@ -432,20 +672,23 @@
                                         <table class="table table-hover mb-0" id="withdrawalHistoryTable">
                                             <thead class="table-light">
                                                 <tr>
-                                                    <th>#</th>
-                                                    <th>DATE</th>
-                                                    <th>AMOUNT</th>
+                                                    <th style="width: 5%;">#</th>
+                                                    <th style="width: 13%;">DATE</th>
+                                                    <th style="width: 13%;">AMOUNT</th>
+                                                    <th style="width: 15%;">CATEGORY</th>
+                                                    <th style="width: 10%;">STATUS</th>
                                                     <th>NOTES</th>
+                                                    <th style="width: 10%;">ACTIONS</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td colspan="4" class="text-center py-4">Loading data...</td>
+                                                    <td colspan="6" class="text-center py-4">Loading data...</td>
                                                 </tr>
                                             </tbody>
                                             <tfoot class="table-light">
                                                 <tr>
-                                                    <th colspan="3" class="text-end">Total:</th>
+                                                    <th colspan="6" class="text-end">Total:</th>
                                                     <th id="footerTotal">₱0.00</th>
                                                 </tr>
                                             </tfoot>
@@ -455,7 +698,7 @@
                                 <div class="pagination-container px-4 pb-4" style="display: none;">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
-                                            <span class="text-muted small" id="pageInfo2"></span>
+                                            <span class="text-muted small" id="pageInfo"></span>
                                         </div>
                                         <div class="d-flex gap-2">
                                             <button class="btn btn-outline-secondary btn-sm" id="firstPage"
@@ -834,24 +1077,101 @@
             success: function (res) {
                 Swal.close();
 
+                // Update all balance fields
                 $('#total_pullout').val(parseFloat(res.total_pullout).toLocaleString('en-US', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2
                 }));
 
+                $('#processing_fee_balance').val(parseFloat(res.processing_fee).toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }));
+
+                $('#ticket_balance').val(parseFloat(res.ticket).toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }));
+
+                $('#profit_balance').val(parseFloat(res.profit).toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }));
+
+                $('#expansion_balance').val(parseFloat(res.expansion).toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }));
+
+                $('#capital_balance').val(parseFloat(res.capital).toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }));
+
+                // Function to update max withdrawable based on selected category
                 function updateMaxWithdrawable() {
-                    let totalPullout = parseFloat($('#total_pullout').val().replace(/,/g, '')) || 0;
+                    let selectedCategory = $('input[name="withdrawal_category"]:checked');
+                    let categoryBalance = 0;
 
-                    $('#max_withdrawable').text(totalPullout.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+                    if (selectedCategory.length > 0) {
+                        let category = selectedCategory.val();
+                        switch (category) {
+                            case 'processing_fee':
+                                categoryBalance = parseFloat(res.processing_fee) || 0;
+                                break;
+                            case 'ticket':
+                                categoryBalance = parseFloat(res.ticket) || 0;
+                                break;
+                            case 'profit':
+                                categoryBalance = parseFloat(res.profit) || 0;
+                                break;
+                            case 'expansion':
+                                categoryBalance = parseFloat(res.expansion) || 0;
+                                break;
+                            case 'capital':
+                                categoryBalance = parseFloat(res.capital) || 0;
+                                break;
+                            default:
+                                categoryBalance = parseFloat(res.total_pullout) || 0;
+                        }
+                    } else {
+                        categoryBalance = parseFloat(res.total_pullout) || 0;
+                    }
 
-                    $('#withdraw_amount').attr('max', totalPullout);
+                    $('#max_withdrawable').text(categoryBalance.toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    }));
+
+                    $('#withdraw_amount').attr('max', categoryBalance);
                 }
 
+                // Update max when category changes
+                $('input[name="withdrawal_category"]').on('change', function () {
+                    updateMaxWithdrawable();
+                    // Clear amount when category changes
+                    $('#withdraw_amount').val('');
+                    $('.quick-amount').removeClass('active');
+                });
+
+                // Initial update
                 updateMaxWithdrawable();
 
+                // Quick amount buttons
                 $('.quick-amount').click(function () {
                     let amount = $(this).data('amount');
                     let maxAmount = parseFloat($('#withdraw_amount').attr('max')) || 0;
+                    let selectedCategory = $('input[name="withdrawal_category"]:checked');
+
+                    if (selectedCategory.length === 0) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Select Category',
+                            text: 'Please select a withdrawal category first!',
+                            timer: 2000
+                        });
+                        return;
+                    }
 
                     $(this).addClass('active').siblings().removeClass('active');
 
@@ -868,11 +1188,26 @@
                     }
                 });
 
+                // Max amount button
                 $('#max_amount').click(function () {
+                    let selectedCategory = $('input[name="withdrawal_category"]:checked');
+
+                    if (selectedCategory.length === 0) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Select Category',
+                            text: 'Please select a withdrawal category first!',
+                            timer: 2000
+                        });
+                        return;
+                    }
+
                     let maxAmount = parseFloat($('#withdraw_amount').attr('max')) || 0;
                     $('#withdraw_amount').val(maxAmount);
+                    $(this).addClass('active').siblings().removeClass('active');
                 });
 
+                // Amount input validation
                 $('#withdraw_amount').on('input', function () {
                     let amount = parseFloat($(this).val()) || 0;
                     let maxAmount = parseFloat($(this).attr('max')) || 0;
@@ -895,6 +1230,7 @@
                     }
                 });
 
+                // Process withdrawal
                 $('#process_withdrawal').click(function () {
                     let total_pullout = parseFloat($('#total_pullout').val().replace(/,/g, ''));
                     let amount = $('#withdraw_amount').val();
@@ -902,6 +1238,9 @@
                     let method = $('#payment_method').val();
                     let reference = $('#reference_no').val();
                     let notes = $('#withdrawal_notes').val();
+
+                    // Get selected category (only 1 allowed)
+                    let selectedCategory = $('input[name="withdrawal_category"]:checked');
 
                     if (!amount || parseFloat(amount) <= 0) {
                         Swal.fire({
@@ -921,9 +1260,19 @@
                         return;
                     }
 
+                    // Validate category selection
+                    if (selectedCategory.length === 0) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Category Required',
+                            text: 'Please select a withdrawal category (Processing Fee, Ticket, Profit, Expansion, or Capital)'
+                        });
+                        return;
+                    }
+
                     Swal.fire({
                         title: 'Confirm Withdrawal',
-                        html: `Are you sure you want to withdraw <strong>₱${parseFloat(amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</strong>?`,
+                        html: `Are you sure you want to withdraw <strong>₱${parseFloat(amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</strong> from <strong>${selectedCategory.data('label') || selectedCategory.val()}</strong>?`,
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
@@ -944,7 +1293,8 @@
                                 amount: amount,
                                 date: date,
                                 total_pullout: total_pullout,
-                                notes: notes
+                                notes: notes,
+                                category: selectedCategory.val()
                             });
 
                             $.ajax({
@@ -954,33 +1304,50 @@
                                     amount: amount,
                                     date: date,
                                     total_pullout: total_pullout,
-                                    notes: notes
+                                    notes: notes,
+                                    category: selectedCategory.val()
                                 },
                                 dataType: 'json',
                                 success: function (res) {
                                     Swal.close();
-                                    Swal.fire({
-                                        title: 'Success',
-                                        text: res.message,
-                                        icon: 'success',
-                                        timer: 800,
-                                        timerProgressBar: true,
-                                        showConfirmButton: false
-                                    }).then(() => {
-                                        pull_out_table.ajax.reload();
-                                        $('#withdrawPullout').modal('hide');
-                                    });
+
+                                    if (res.status === 'success') {
+                                        Swal.fire({
+                                            title: 'Success',
+                                            text: res.message,
+                                            icon: 'success',
+                                            timer: 800,
+                                            timerProgressBar: true,
+                                            showConfirmButton: false
+                                        }).then(() => {
+                                            pull_out_table.ajax.reload();
+                                            $('#withdrawPullout').modal('hide');
+                                        });
+                                    } else if (res.status === 'error') {
+                                        Swal.fire({
+                                            title: 'Error',
+                                            text: res.message,
+                                            icon: 'error',
+                                            confirmButtonColor: '#d33',
+                                            confirmButtonText: 'OK'
+                                        });
+                                    }
                                 },
                                 error: function (err) {
                                     Swal.close();
                                     console.log(err);
-                                    Swal.fire({ icon: 'error', title: 'Server Error', text: 'Check console for details' });
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Server Error',
+                                        text: 'Check console for details'
+                                    });
                                 }
                             });
                         }
                     });
                 });
 
+                // Reset modal on close
                 $('#withdrawPullout').on('hidden.bs.modal', function () {
                     $('#withdraw_amount').val('');
                     $('#withdrawal_date').val('<?php echo date('Y-m-d'); ?>');
@@ -988,14 +1355,22 @@
                     $('#reference_no').val('');
                     $('#withdrawal_notes').val('');
                     $('#reference_field').hide();
+                    $('input[name="withdrawal_category"]').prop('checked', false);
+                    $('.quick-amount').removeClass('active');
+                    $('#max_amount').removeClass('active');
                 });
 
+                // Show modal
                 $('#withdrawPullout').modal('show');
             },
             error: function (err) {
                 Swal.close();
                 console.log(err);
-                Swal.fire({ icon: 'error', title: 'Server Error', text: 'Check console for details' });
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Server Error',
+                    text: 'Check console for details'
+                });
             }
         });
 
@@ -1020,8 +1395,6 @@
                 Swal.close();
 
                 if (response.status === 'success') {
-                    $('#footerTotal').text('₱ ' + (response.total || '0.00'));
-
                     let tbody = $('#withdrawalHistoryTable tbody');
                     tbody.empty();
 
@@ -1030,6 +1403,22 @@
                         const rowsPerPage = 5;
                         const totalRows = response.data.length;
                         const totalPages = Math.ceil(totalRows / rowsPerPage);
+
+                        // Category labels and colors
+                        const categoryLabels = {
+                            'processing_fee': { label: 'Processing Fee', color: 'warning', icon: 'fa-receipt' },
+                            'ticket': { label: 'Ticket', color: 'info', icon: 'fa-ticket-alt' },
+                            'profit': { label: 'Profit', color: 'success', icon: 'fa-chart-line' },
+                            'expansion': { label: 'Expansion', color: 'primary', icon: 'fa-expand-arrows-alt' },
+                            'capital': { label: 'Capital', color: 'secondary', icon: 'fa-building' }
+                        };
+
+                        function getCategoryBadge(category) {
+                            const cat = categoryLabels[category] || { label: category || 'N/A', color: 'secondary', icon: 'fa-tag' };
+                            return `<span class="badge bg-${cat.color}-soft text-${cat.color} px-3 py-2 rounded-pill">
+                            <i class="fas ${cat.icon} me-1"></i> ${cat.label}
+                        </span>`;
+                        }
 
                         function displayTablePage(page) {
                             tbody.empty();
@@ -1046,13 +1435,48 @@
                                 });
 
                                 let row = `
-                                    <tr>
-                                        <td>${i + 1}</td>
-                                        <td>${formattedDate}</td>
-                                        <td class="fw-bold text-info">₱ ${parseFloat(item.withdraw_amt).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                                        <td>${item.note || '<span class="text-muted">—</span>'}</td>
-                                    </tr>
-                                `;
+                                <tr>
+                                    <td>${i + 1}</td>
+                                    <td>${formattedDate}</td>
+                                    <td class="fw-bold text-info">₱ ${parseFloat(item.withdraw_amt).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                                    <td>${getCategoryBadge(item.category)}</td>
+                                    <td>${item.status === '1' ? '<span class="badge bg-success">Returned</span>' : '<span class="badge bg-secondary">Active</span>'}</td>
+                                    <td>${item.note || '<span class="text-muted">—</span>'}</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <button class="btn btn-warning btn-sm edit-withdrawal" 
+                                                data-id="${item.id}"
+                                                data-amount="${item.withdraw_amt}"
+                                                data-category="${item.category}"
+                                                data-note="${item.note || ''}"
+                                                data-date="${item.date_added}"
+                                                title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-danger btn-sm delete-withdrawal" 
+                                                data-id="${item.id}"
+                                                data-amount="${item.withdraw_amt}"
+                                                data-category="${item.category}"
+                                                title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                            ${item.status == 0 ? `
+                                                <button class="btn btn-success btn-sm return-withdrawal" 
+                                                    data-id="${item.id}"
+                                                    data-amount="${item.withdraw_amt}"
+                                                    data-category="${item.category}"
+                                                    title="Return Amount">
+                                                    <i class="fas fa-undo"></i>
+                                                </button>
+                                            ` : `
+                                                <button class="btn btn-secondary btn-sm" disabled title="Already Returned">
+                                                    <i class="fas fa-check-circle"></i>
+                                                </button>
+                                            `}
+                                        </div>
+                                    </td>
+                                </tr>
+                            `;
                                 tbody.append(row);
                             }
 
@@ -1107,7 +1531,7 @@
                         $('#footerTotal').text('₱ ' + totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2 }));
 
                     } else {
-                        tbody.append('<tr><td colspan="4" class="text-center py-5"><i class="fas fa-inbox fa-3x text-muted mb-3"></i><br><span class="text-muted">No withdrawal history found</span></td></tr>');
+                        tbody.append('<tr><td colspan="7" class="text-center py-5"><i class="fas fa-inbox fa-3x text-muted mb-3"></i><br><span class="text-muted">No withdrawal history found</span></td></tr>');
                         $('#footerTotal').text('₱0.00');
                         $('.pagination-container').hide();
                     }
@@ -1128,6 +1552,247 @@
                     icon: 'error',
                     title: 'Error',
                     text: 'An error occurred while loading data'
+                });
+            }
+        });
+    });
+
+    // Edit Withdrawal
+    $(document).on('click', '.edit-withdrawal', function () {
+        const id = $(this).data('id');
+        const amount = $(this).data('amount');
+        const category = $(this).data('category');
+        const note = $(this).data('note');
+        const date = $(this).data('date');
+
+        Swal.fire({
+            title: 'Edit Withdrawal',
+            html: `
+            <div class="text-start">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Amount</label>
+                    <input type="number" class="form-control" id="edit_amount" value="${amount}" step="0.01" min="0">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Category</label>
+                    <select class="form-select" id="edit_category">
+                        <option value="processing_fee" ${category === 'processing_fee' ? 'selected' : ''}>Processing Fee</option>
+                        <option value="ticket" ${category === 'ticket' ? 'selected' : ''}>Ticket</option>
+                        <option value="profit" ${category === 'profit' ? 'selected' : ''}>Profit</option>
+                        <option value="expansion" ${category === 'expansion' ? 'selected' : ''}>Expansion</option>
+                        <option value="capital" ${category === 'capital' ? 'selected' : ''}>Capital</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Notes</label>
+                    <textarea class="form-control" id="edit_notes" rows="2">${note}</textarea>
+                </div>
+            </div>
+        `,
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Update',
+            cancelButtonText: 'Cancel',
+            preConfirm: () => {
+                return {
+                    amount: $('#edit_amount').val(),
+                    category: $('#edit_category').val(),
+                    notes: $('#edit_notes').val()
+                };
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const data = result.value;
+
+                Swal.fire({
+                    title: 'Processing...',
+                    html: 'Please wait',
+                    allowOutsideClick: false,
+                    didOpen: () => Swal.showLoading()
+                });
+
+                $.ajax({
+                    url: '<?= base_url() ?>PullOut_cont/update_withdrawal',
+                    method: 'POST',
+                    data: {
+                        id: id,
+                        amount: data.amount,
+                        category: data.category,
+                        notes: data.notes
+                    },
+                    dataType: 'json',
+                    success: function (res) {
+                        Swal.close();
+                        if (res.status === 'success') {
+                            Swal.fire({
+                                title: 'Success',
+                                text: res.message,
+                                icon: 'success',
+                                timer: 1500,
+                                showConfirmButton: false
+                            }).then(() => {
+                                $('#withdrawHistoryBtn').click();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: res.message
+                            });
+                        }
+                    },
+                    error: function (err) {
+                        Swal.close();
+                        console.error(err);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Server Error',
+                            text: 'Check console for details'
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+    // Delete Withdrawal
+    $(document).on('click', '.delete-withdrawal', function () {
+        const id = $(this).data('id');
+        const amount = $(this).data('amount');
+        const category = $(this).data('category');
+
+        Swal.fire({
+            title: 'Delete Withdrawal?',
+            html: `Are you sure you want to delete this withdrawal of <strong>₱${parseFloat(amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</strong>?<br><small>This action cannot be undone.</small>`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Processing...',
+                    html: 'Please wait',
+                    allowOutsideClick: false,
+                    didOpen: () => Swal.showLoading()
+                });
+
+                $.ajax({
+                    url: '<?= base_url() ?>PullOut_cont/delete_withdrawal',
+                    method: 'POST',
+                    data: {
+                        id: id,
+                        amount: amount,
+                        category: category
+                    },
+                    dataType: 'json',
+                    success: function (res) {
+                        Swal.close();
+                        if (res.status === 'success') {
+                            Swal.fire({
+                                title: 'Deleted',
+                                text: res.message,
+                                icon: 'success',
+                                timer: 1500,
+                                showConfirmButton: false
+                            }).then(() => {
+                                $('#withdrawHistoryBtn').click();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: res.message
+                            });
+                        }
+                    },
+                    error: function (err) {
+                        Swal.close();
+                        console.error(err);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Server Error',
+                            text: 'Check console for details'
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+    // Return Withdrawal Amount
+    $(document).on('click', '.return-withdrawal', function () {
+        const id = $(this).data('id');
+        const amount = $(this).data('amount');
+        const category = $(this).data('category');
+
+        const categoryLabels = {
+            'processing_fee': 'Processing Fee',
+            'ticket': 'Ticket',
+            'profit': 'Profit',
+            'expansion': 'Expansion',
+            'capital': 'Capital'
+        };
+
+        Swal.fire({
+            title: 'Return Amount?',
+            html: `Are you sure you want to return <strong>₱${parseFloat(amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</strong> to <strong>${categoryLabels[category] || category}</strong>?<br><small>This will restore the amount to the selected category.</small>`,
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#28a745',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, return',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Processing...',
+                    html: 'Please wait',
+                    allowOutsideClick: false,
+                    didOpen: () => Swal.showLoading()
+                });
+
+                $.ajax({
+                    url: '<?= base_url() ?>PullOut_cont/return_withdrawal',
+                    method: 'POST',
+                    data: {
+                        id: id,
+                        amount: amount,
+                        category: category
+                    },
+                    dataType: 'json',
+                    success: function (res) {
+                        Swal.close();
+                        if (res.status === 'success') {
+                            Swal.fire({
+                                title: 'Success',
+                                text: res.message,
+                                icon: 'success',
+                                timer: 1500,
+                                showConfirmButton: false
+                            }).then(() => {
+                                $('#withdrawHistoryBtn').click();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: res.message
+                            });
+                        }
+                    },
+                    error: function (err) {
+                        Swal.close();
+                        console.error(err);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Server Error',
+                            text: 'Check console for details'
+                        });
+                    }
                 });
             }
         });
