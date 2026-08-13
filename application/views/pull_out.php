@@ -1,4 +1,10 @@
 <style>
+    .modal-dimmed {
+        filter: brightness(0.4);
+        pointer-events: none;
+        transition: filter 0.2s ease;
+    }
+
     .total-box {
         background: linear-gradient(135deg, var(--light-blue), #ffffff);
         border-radius: 12px;
@@ -1218,7 +1224,7 @@
                             icon: 'warning',
                             title: 'Amount Adjusted',
                             text: 'Amount cannot exceed available balance!',
-                            timer: 1500,
+                            timer: 800,
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false
@@ -1565,94 +1571,148 @@
         const note = $(this).data('note');
         const date = $(this).data('date');
 
-        Swal.fire({
-            title: 'Edit Withdrawal',
-            html: `
-            <div class="text-start">
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Amount</label>
-                    <input type="number" class="form-control" id="edit_amount" value="${amount}" step="0.01" min="0">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Category</label>
-                    <select class="form-select" id="edit_category">
-                        <option value="processing_fee" ${category === 'processing_fee' ? 'selected' : ''}>Processing Fee</option>
-                        <option value="ticket" ${category === 'ticket' ? 'selected' : ''}>Ticket</option>
-                        <option value="profit" ${category === 'profit' ? 'selected' : ''}>Profit</option>
-                        <option value="expansion" ${category === 'expansion' ? 'selected' : ''}>Expansion</option>
-                        <option value="capital" ${category === 'capital' ? 'selected' : ''}>Capital</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Notes</label>
-                    <textarea class="form-control" id="edit_notes" rows="2">${note}</textarea>
+        const modalHtml = `
+            <div class="modal fade" id="editWithdrawalModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <i class="fas fa-edit me-2 text-warning"></i>
+                                Edit Withdrawal
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Amount</label>
+                                <input type="number" class="form-control" id="edit_amount" value="${amount}" step="0.01" min="0">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Category</label>
+                                <select class="form-select" id="edit_category">
+                                    <option value="processing_fee" ${category === 'processing_fee' ? 'selected' : ''}>Processing Fee</option>
+                                    <option value="ticket" ${category === 'ticket' ? 'selected' : ''}>Ticket</option>
+                                    <option value="profit" ${category === 'profit' ? 'selected' : ''}>Profit</option>
+                                    <option value="expansion" ${category === 'expansion' ? 'selected' : ''}>Expansion</option>
+                                    <option value="capital" ${category === 'capital' ? 'selected' : ''}>Capital</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Notes</label>
+                                <textarea class="form-control" id="edit_notes" rows="2">${note}</textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-1"></i> Cancel
+                            </button>
+                            <button type="button" class="btn btn-primary" id="saveEditWithdrawal">
+                                <i class="fas fa-save me-1"></i> Update
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        `,
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Update',
-            cancelButtonText: 'Cancel',
-            preConfirm: () => {
-                return {
-                    amount: $('#edit_amount').val(),
-                    category: $('#edit_category').val(),
-                    notes: $('#edit_notes').val()
-                };
+        `;
+
+        $('#editWithdrawalModal').remove();
+
+        $('body').append(modalHtml);
+
+        // Get both modals
+        const historyModal = document.getElementById('withdrawHistoryModal');
+        const editModal = document.getElementById('editWithdrawalModal');
+
+        // Add dimming effect when edit modal opens
+        editModal.addEventListener('show.bs.modal', () => {
+            if (historyModal) {
+                historyModal.classList.add('modal-dimmed');
             }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const data = result.value;
+        });
 
+        // Remove dimming effect when edit modal closes
+        editModal.addEventListener('hidden.bs.modal', () => {
+            if (historyModal) {
+                historyModal.classList.remove('modal-dimmed');
+            }
+            // Clean up
+            $(editModal).remove();
+        });
+
+        // Show modal
+        const modal = new bootstrap.Modal(editModal, {
+            backdrop: 'static',
+            keyboard: false
+        });
+        modal.show();
+
+        // Handle save
+        $('#saveEditWithdrawal').on('click', function () {
+            const data = {
+                amount: $('#edit_amount').val(),
+                category: $('#edit_category').val(),
+                notes: $('#edit_notes').val()
+            };
+
+            if (parseFloat(data.amount) <= 0) {
                 Swal.fire({
-                    title: 'Processing...',
-                    html: 'Please wait',
-                    allowOutsideClick: false,
-                    didOpen: () => Swal.showLoading()
+                    icon: 'error',
+                    title: 'Invalid Amount',
+                    text: 'Amount must be greater than 0'
                 });
+                return;
+            }
 
-                $.ajax({
-                    url: '<?= base_url() ?>PullOut_cont/update_withdrawal',
-                    method: 'POST',
-                    data: {
-                        id: id,
-                        amount: data.amount,
-                        category: data.category,
-                        notes: data.notes
-                    },
-                    dataType: 'json',
-                    success: function (res) {
-                        Swal.close();
-                        if (res.status === 'success') {
-                            Swal.fire({
-                                title: 'Success',
-                                text: res.message,
-                                icon: 'success',
-                                timer: 1500,
-                                showConfirmButton: false
-                            }).then(() => {
-                                $('#withdrawHistoryBtn').click();
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: res.message
-                            });
-                        }
-                    },
-                    error: function (err) {
-                        Swal.close();
-                        console.error(err);
+            modal.hide();
+
+            Swal.fire({
+                title: 'Processing...',
+                html: 'Please wait',
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading()
+            });
+
+            $.ajax({
+                url: '<?= base_url() ?>PullOut_cont/update_withdrawal',
+                method: 'POST',
+                data: {
+                    id: id,
+                    amount: data.amount,
+                    category: data.category,
+                    notes: data.notes
+                },
+                dataType: 'json',
+                success: function (res) {
+                    Swal.close();
+                    if (res.status === 'success') {
+                        Swal.fire({
+                            title: 'Success',
+                            text: res.message,
+                            icon: 'success',
+                            timer: 800,
+                            showConfirmButton: false
+                        }).then(() => {
+                            // Refresh the history modal
+                            $('#withdrawHistoryBtn').click();
+                        });
+                    } else {
                         Swal.fire({
                             icon: 'error',
-                            title: 'Server Error',
-                            text: 'Check console for details'
+                            title: 'Error',
+                            text: res.message
                         });
                     }
-                });
-            }
+                },
+                error: function (err) {
+                    Swal.close();
+                    console.error(err);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Server Error',
+                        text: 'Check console for details'
+                    });
+                }
+            });
         });
     });
 
@@ -1696,7 +1756,7 @@
                                 title: 'Deleted',
                                 text: res.message,
                                 icon: 'success',
-                                timer: 1500,
+                                timer: 800,
                                 showConfirmButton: false
                             }).then(() => {
                                 $('#withdrawHistoryBtn').click();
@@ -1771,7 +1831,7 @@
                                 title: 'Success',
                                 text: res.message,
                                 icon: 'success',
-                                timer: 1500,
+                                timer: 800,
                                 showConfirmButton: false
                             }).then(() => {
                                 $('#withdrawHistoryBtn').click();
@@ -1797,6 +1857,4 @@
             }
         });
     });
-
-
 </script>
